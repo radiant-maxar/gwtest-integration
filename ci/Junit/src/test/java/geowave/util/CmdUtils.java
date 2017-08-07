@@ -24,6 +24,7 @@ public class CmdUtils {
 		s.useDelimiter("\\A");
 		String response = s.hasNext() ? s.next() : "";
 		s.close();
+		System.out.println("R: " + response);
 		return response;
 	}
 	public static String send(String... cmd) {

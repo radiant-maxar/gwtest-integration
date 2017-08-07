@@ -21,11 +21,12 @@ public class TestUtils {
 		if (insensitiveMatch(response, "exception")) {
 			System.out.println("R: " + response);
 			fail("Response should not contain exception");
+//		} else if (insensitiveMatch(response, "error")){
+//			System.out.println("R: " + response);
+//			fail("Response should not contain error");
 		} else {
 			// pass
 		}
-// 		TODO: put this back
-//		assertTrue("Response should not contain error", !insensitiveMatch(response, "error"));
 	}
 	
 	// Return the status code from a GET

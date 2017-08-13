@@ -24,7 +24,6 @@ public class CmdUtils {
 		s.useDelimiter("\\A");
 		String response = s.hasNext() ? s.next() : "";
 		s.close();
-		System.out.println("R: " + response);
 		return response;
 	}
 	public static String send(String... cmd) {
@@ -48,6 +47,23 @@ public class CmdUtils {
 		return responses;
 	}
 	
+	public static String getProperty(String response, String propertyRegEx) {
+		// Get string after property name + colon
+		propertyRegEx += ".*:";
+		String[] matches = response.split(propertyRegEx);
+		
+		// If no match, return empty string
+		String match;
+		if (matches.length < 2) {
+			return "";
+		} else {
+			match = matches[1];
+		}
+		
+		// trim match
+		return match.split("\n")[0].trim();
+	}
+	
 	private static Process createCmdProcess(String[] cmd, String[] vars) throws Exception {
 		if (cmd.length == 1) {
 			return Runtime.getRuntime().exec(cmd[0], vars);
@@ -57,4 +73,6 @@ public class CmdUtils {
 			throw new Exception("Must have at least one string command.");
 		}
 	}
+	
+	
 }

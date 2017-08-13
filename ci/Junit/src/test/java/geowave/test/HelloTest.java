@@ -21,23 +21,23 @@ public class HelloTest {
 	private String berlin = "BBOX(shape,13.0535, 52.3303, 13.7262, 52.6675)";
 	private String paris = "BBOX(shape,2.0868, 48.6583, 2.6379, 49.0469)";
 
-	private String addStore = "geowave config addstore storeName --gwNamespace geowave.gdelt -t hbase --zookeeper sandbox.hortonworks.com:2181";
-	private String addStore_KDE = "geowave config addstore kdeStoreName --gwNamespace geowave.gdelt -t hbase --zookeeper sandbox.hortonworks.com:2181";
+	private String addStore = "geowave config addstore storeName --gwNamespace nameSpace -t hbase --zookeeper sandbox.hortonworks.com:2181";
+	private String addStore_KDE = "geowave config addstore kdeStoreName --gwNamespace nameSpace -t hbase --zookeeper sandbox.hortonworks.com:2181";
 	private String addIndex = "geowave config addindex -t spatial indexName --partitionStrategy round_robin --numPartitions 32";
-	private String[] ingestGermany = {"geowave", "ingest", "localtogw", "/mnt/data/gdelt", "storeName", "indexName", "--gdelt.cql",  "INTERSECTS(geometry," + germany + ")"};
+	private String[] ingestGermany = {"geowave", "ingest", "localtogw", "/mnt/gdelt", "storeName", "indexName", "-f", "gdelt", "--gdelt.cql",  "INTERSECTS(geometry," + germany + ")"};
 	private String runKDE = "hadoop jar /usr/local/geowave-0.9.5-hdp2/tools/geowave-tools-0.9.5-hdp2.jar analytic kde --featureType gdeltevent --minLevel 5 --maxLevel 26 --minSplits 32 --maxSplits 32 --coverageName coverageName --hdfsHostPort sandbox.hortonworks.com:8020 --jobSubmissionHostPort sandbox.hortonworks.com:8032 --tileSize 1 storeName kdeStoreName";
 	
-	private String addStore_raster = "geowave config addstore storeName -t hbase -z sandbox.hortonworks.com:2181 --gwNamespace nameSpace";
+	private String addStore_raster = "geowave config addstore -t hbase -z sandbox.hortonworks.com:2181 storeName --gwNamespace nameSpace";
 	private String copyStore_raster = "geowave config cpstore storeName copiedStoreName --gwNamespace nameSpace";
 	private String addIndex_raster = "geowave config addindex -t spatial indexName";
-	private String[] cacheGermany = {"geowave", "landsat", "analyze", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", "INTERSECTS(shape," + germany + ") AND band='B8' AND cloudCover>0", "-ws", "/mnt/data/landsat"};
-	private String[] cacheBerlin = {"geowave", "landsat", "analyze", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", berlin + " AND band='B8' AND cloudCover>0", "-ws", "/mnt/data/landsat"};
-	private String[] cacheParis = {"geowave", "landsat", "analyze", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", paris + " AND band='B8' AND cloudCover>0", "-ws", "/mnt/data/landsat"};
-	private String[] ingestBerlin = {"geowave", "landsat", "ingest", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", berlin + " AND band='B8' AND cloudCover>0", "--crop", "--retainimages", "-ws", "/mnt/data/landsat", "--vectorstore", "copiedStoreName", "--pyramid", "--coverage", "coverageName", "storeName", "spatial"};
+	private String[] cacheGermany = {"geowave", "landsat", "analyze", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", "INTERSECTS(shape," + germany + ") AND band='B8' AND cloudCover>0", "-ws", "/mnt/landsat"};
+	private String[] cacheBerlin = {"geowave", "landsat", "analyze", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", berlin + " AND band='B8' AND cloudCover>0", "-ws", "/mnt/landsat"};
+	private String[] cacheParis = {"geowave", "landsat", "analyze", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", paris + " AND band='B8' AND cloudCover>0", "-ws", "/mnt/landsat"};
+	private String[] ingestBerlin = {"geowave", "landsat", "ingest", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", berlin + " AND band='B8' AND cloudCover>0", "--crop", "--retainimages", "-ws", "/mnt/landsat", "--vectorstore", "copiedStoreName", "--pyramid", "--coverage", "coverageName", "storeName", "indexName"};
 	
 	// Environment Variables
 	private String[] hadoop_home = {"HADOOP_HOME=/usr/hdp/2.6.0.3-8/hadoop/"};
-	private String[] ld_library_path = {"LD_LIBRARY_PATH=/mnt/data/"};
+	private String[] ld_library_path = {"LD_LIBRARY_PATH=/mnt/"};
 	
 	
 	@Before
@@ -50,6 +50,8 @@ public class HelloTest {
 		CmdUtils.send("geowave config rmstore kdeStoreName");
 		CmdUtils.send("geowave config rmstore copiedStoreName");
 		CmdUtils.send("geowave config rmindex indexName");
+		CmdUtils.send("geowave gs rmstyle styleName_sub");
+		CmdUtils.send("geowave gs rmstyle styleName_kde");
 	}
 
 	@Test
@@ -64,14 +66,29 @@ public class HelloTest {
 
 	@Test
 	public void vector_happyPath() {
-		// Ingest data
+		// Create store/index
 		TestUtils.assertSuccess(CmdUtils.send(addStore));
 		TestUtils.assertSuccess(CmdUtils.send(addIndex));
+		
+		// Verify
+		String configList = CmdUtils.send("geowave config list");
+		assertEquals("nameSpace", CmdUtils.getProperty(configList, "store.storeName.opts.gwNamespace"));
+		assertEquals("32", CmdUtils.getProperty(configList, "index.indexName.opts.numPartitions"));
+		assertEquals("spatial", CmdUtils.getProperty(configList, "index.indexName.type"));
+		
+		// Ingest
 		TestUtils.assertSuccess(CmdUtils.send(ingestGermany));
+		
+		// Verify
+		//TODO
 		
 		// Run a Kernel Density Estimation
 		TestUtils.assertSuccess(CmdUtils.send(addStore_KDE));
 		TestUtils.assertSuccess(CmdUtils.send(runKDE));
+		
+		// Verify
+		configList = CmdUtils.send("geowave config list");
+		assertEquals("nameSpace", CmdUtils.getProperty(configList, "store.kdeStoreName.opts.gwNamespace"));
 		
 		// Start Geoserver
 		TestUtils.assertSuccess(CmdUtils.send("geowave config geoserver sandbox.hortonworks.com:8993"));
@@ -81,8 +98,13 @@ public class HelloTest {
 		// Add Layers and Color Maps
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer storeName"));
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer kdeStoreName"));
-		TestUtils.assertSuccess(CmdUtils.send("geowave gs addstyle styleName_kde -sld /mnt/data/KDEColorMap.sld"));
-		TestUtils.assertSuccess(CmdUtils.send("geowave gs addstyle styleName_sub -sld /mnt/data/SubsamplePoints.sld"));
+		TestUtils.assertSuccess(CmdUtils.send("geowave gs addstyle styleName_kde -sld /mnt/KDEColorMap.sld"));
+		TestUtils.assertSuccess(CmdUtils.send("geowave gs addstyle styleName_sub -sld /mnt/SubsamplePoints.sld"));
+		
+		// Verify
+		String styles = CmdUtils.send("geowave gs liststyles");
+		assertTrue(styles.contains("styleName_kde"));
+		assertTrue(styles.contains("styleName_sub"));
 		
 		// Set Default Styles
 		TestUtils.assertSuccess(CmdUtils.send("geowave gs setls coverageName --styleName styleName_kde"));
@@ -92,18 +114,24 @@ public class HelloTest {
 	@Test
 	public void raster_happyPath() {
 		// Need to `tar -xvf gdal192-CentOS5.8-gcc4.1.2-x86_64.tar.gz` first
-		// Add store and index
+		// Add stores and index
 		TestUtils.assertSuccess(CmdUtils.send(addStore_raster));
 		TestUtils.assertSuccess(CmdUtils.send(copyStore_raster));
 		TestUtils.assertSuccess(CmdUtils.send(addIndex_raster));
 		
+		// Verify
+		String configList = CmdUtils.send("geowave config list");
+		assertEquals("nameSpace", CmdUtils.getProperty(configList, "store.storeName.opts.gwNamespace"));
+		assertEquals("nameSpace", CmdUtils.getProperty(configList, "store.copiedStoreName.opts.gwNamespace"));
+		assertEquals("spatial", CmdUtils.getProperty(configList, "index.indexName.type"));
+		
 		// Cache Data
 		TestUtils.assertSuccess(CmdUtils.send(cacheGermany));
 		TestUtils.assertSuccess(CmdUtils.send(cacheBerlin));
-		TestUtils.assertSuccess(CmdUtils.send(cacheParis));
+//		TestUtils.assertSuccess(CmdUtils.send(cacheParis));
 		
 		// Ingest Data
-		TestUtils.assertSuccess(CmdUtils.send(ingestGermany));
+		TestUtils.assertSuccess(CmdUtils.send(ld_library_path, ingestBerlin));
 		
 		// Add Layers
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer storeName"));

@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import org.json.*;
+
+
 public class CmdUtils {
 	
 	// Send a command, and get the response back.
@@ -62,6 +65,18 @@ public class CmdUtils {
 		
 		// trim match
 		return match.split("\n")[0].trim();
+	}
+	
+	public static String getJSONProperty(String json, String property) {
+		System.out.println("R: " + json);
+		JSONObject j = new JSONObject(json);
+		return (String) j.get(property);
+	}
+	
+	public static boolean JSONcontains(String json, String property) {
+		System.out.println("R: " + json);
+		JSONObject j = new JSONObject(json);
+		return j.has(property);
 	}
 	
 	private static Process createCmdProcess(String[] cmd, String[] vars) throws Exception {

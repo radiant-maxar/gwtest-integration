@@ -21,8 +21,8 @@ public class TestUtils {
 		if (insensitiveMatch(response, "exception")) {
 			System.out.println("R: " + response);
 			fail("Response should not contain exception");
-//		} else if (insensitiveMatch(response, "error")){
-//			System.out.println("R: " + response);
+		} else if (insensitiveMatch(response, "error")){
+			System.out.println("R: " + response);
 //			fail("Response should not contain error");
 		} else {
 			// pass

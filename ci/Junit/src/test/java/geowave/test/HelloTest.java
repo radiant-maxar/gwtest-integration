@@ -67,6 +67,16 @@ public class HelloTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		// Verify no data in GS:
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "{\"layers\": []}"));
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), "[]"));
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), "[]"));
+		
+		// Verify there is no ingested data:
+		for (String store : new String[]{vStoreKDE, vStore, rStore, rCopiedStore}) {
+			assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave remote liststats " + store), "exception"));
+		}
+		
 	}
 
 	@After
@@ -78,12 +88,15 @@ public class HelloTest {
 		for (String index : new String[]{vIndex, rIndex}) {
 			CmdUtils.send("geowave config rmindex " + index);
 		}
+		for (String layer : new String[]{vCoverage, vCoverageKDE, rCoverage, "band", "scene"}) {
+			CmdUtils.send("geowave gs rmfl " + layer);
+		}
 		CmdUtils.send("geowave gs rmstyle styleName_sub");
 		CmdUtils.send("geowave gs rmstyle styleName_kde");
-		CmdUtils.send("geowave gs rmds gdelt-vector");
-		CmdUtils.send("geowave gs rmfl gdeltevent");
-		CmdUtils.send("geowave gs rmfl gdeltevent_kde");
-		CmdUtils.send("geowave gs rmcs gdelt-kde-raster");
+		CmdUtils.send("geowave gs rmds " + vStore + "-vector");
+		CmdUtils.send("geowave gs rmds " + rCopiedStore + "-vector");
+		CmdUtils.send("geowave gs rmcs " + vStoreKDE + "-raster");
+		CmdUtils.send("geowave gs rmcs " + rStore + "-raster");
 	}
 
 	@Test
@@ -110,12 +123,6 @@ public class HelloTest {
 		assertEquals("32", CmdUtils.getProperty(configList, String.format("index.%s.opts.numPartitions", vIndex)));
 		assertEquals("spatial", CmdUtils.getProperty(configList, String.format("index.%s.type", vIndex)));
 		
-		// Verify no data exists
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave remote liststats " + vStore), "exception"));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave remote liststats " + vStoreKDE), "exception"));
-		assertFalse(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), vCoverage));
-		assertFalse(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), "gdelt-vector"));
-		
 		// Ingest
 		TestUtils.assertSuccess(CmdUtils.send(ingestGermany));
 		
@@ -138,14 +145,14 @@ public class HelloTest {
 		
 		// Verify
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), vCoverage));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), "gdelt-vector"));	
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), vStore + "-vector"));	
 		
 		// Add KDE Layer
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + vStoreKDE));
 		
 		// Verify
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), vCoverageKDE));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), "gdelt-kde-raster"));	
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), vStoreKDE + "-raster"));	
 		
 		TestUtils.assertSuccess(CmdUtils.send("geowave gs addstyle styleName_kde -sld /mnt/KDEColorMap.sld"));
 		TestUtils.assertSuccess(CmdUtils.send("geowave gs addstyle styleName_sub -sld /mnt/SubsamplePoints.sld"));
@@ -164,9 +171,8 @@ public class HelloTest {
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverageKDE), "styleName_kde"));
 	}
 	
-	@Test @Ignore
+	@Test
 	public void raster_happyPath() {
-		// Need to `tar -xvf gdal192-CentOS5.8-gcc4.1.2-x86_64.tar.gz` first
 		// Add stores and index
 		TestUtils.assertSuccess(CmdUtils.send(addStore_raster));
 		TestUtils.assertSuccess(CmdUtils.send(copyStore_raster));
@@ -189,13 +195,22 @@ public class HelloTest {
 		TestUtils.assertSuccess(CmdUtils.send(ld_library_path, ingestBerlin));
 		
 		// Verify
-		// TODO
+		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + rStore));
+		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + rCopiedStore)); // Should not have exception if ingest was successful.
 		
-		// Add Layers
+		// Add First Layer
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + rStore));
-		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + rCopiedStore));
 		
 		// Verify
-		// TODO
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), rCoverage));
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), rStore + "-raster"));	
+		
+		// Add Copied Layer
+		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer --add ALL " + rCopiedStore));
+		
+		// Verify
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "band"));
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "scene"));
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), rCopiedStore + "-vector"));	
 	}
 }

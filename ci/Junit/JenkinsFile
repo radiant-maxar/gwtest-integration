@@ -1,5 +1,15 @@
 #!/usr/bin/env groovy
 
-node { 
-    echo 'Hello World - poke?' 
+pipeline {
+	stages {
+		stage('Build') {
+			echo 'This is where GW is created'
+		}
+		stage('Setup') {
+			echo 'This is where GW is setup'
+		}
+		stage('Test') {
+			echo 'This is where GW is tested'
+		}
+	}
 }

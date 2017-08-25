@@ -153,7 +153,7 @@ public class HelloTest {
 		// Set Default Styles
 		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave gs setls %s --styleName styleName_kde", vCoverageKDE)));
 		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave gs setls %s --styleName styleName_sub", vCoverage)));
-		
+		// POKE
 		// Verify
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverage), "styleName_sub"));
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverageKDE), "styleName_kde"));

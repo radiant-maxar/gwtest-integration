@@ -19,8 +19,8 @@ pipeline {
 		}
 		stage('Test') {
 			steps{
-				cd 'ci/Junit'
-				mvn test
+				sh "cd ci/Junit"
+				sh "mvn test"
 			}
 		}
 	}

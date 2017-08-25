@@ -2,6 +2,10 @@
 
 pipeline {
 	agent any
+	tools { 
+        maven 'Maven 4.11.0' 
+        jdk 'jdk8' 
+    }
 	stages {
 		stage('Build') {
 			steps{
@@ -15,7 +19,8 @@ pipeline {
 		}
 		stage('Test') {
 			steps{
-				echo 'This is where GW is tested'
+				cd 'ci/Junit'
+				mvn test
 			}
 		}
 	}

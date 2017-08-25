@@ -3,13 +3,19 @@
 pipeline {
 	stages {
 		stage('Build') {
-			sh "echo 'This is where GW is created'"
+			steps{
+				echo 'This is where GW is created'
+			}
 		}
 		stage('Setup') {
-			sh "echo 'This is where GW is setup'"
+			steps{
+				echo 'This is where GW is setup'
+			}
 		}
 		stage('Test') {
-			sh "echo 'This is where GW is tested'"
+			steps{
+				echo 'This is where GW is tested'
+			}
 		}
 	}
 }

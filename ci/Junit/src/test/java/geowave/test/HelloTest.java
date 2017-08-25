@@ -23,11 +23,6 @@ public class HelloTest {
 	private String vCoverageKDE = "gdeltevent_kde";
 	private String vSpace = "geowave.gdelt";
 	private String vSpaceKDE = "geowave.kde_gdelt";
-//	private String vSpace = "malarkey";
-//	private String vStore = "foo";
-//	private String vStoreKDE = "bar";
-//	private String vIndex = "baz";
-//	private String vCoverage = "some_cov_name";
 	
 	private String rStore = "landsatraster";
 	private String rCopiedStore = "landsatvector";
@@ -35,13 +30,6 @@ public class HelloTest {
 	private String rCoverage = "berlin_mosaic";
 	private String rSpace = "landsat_raster";
 	private String rSpaceCopy = "landsat_vector";
-//	private String rSpace = "balogna_raster";
-//	private String rSpaceCopy = "bologna_vector";
-//	private String rStore = "fake";
-//	private String rCopiedStore = "garbage";
-//	private String rIndex = "dummy";
-//	private String rCoverage = "other_cov_name";
-	
 	
 	
 	// Commands:
@@ -184,12 +172,9 @@ public class HelloTest {
 		assertEquals(rSpaceCopy, CmdUtils.getProperty(configList, String.format("store.%s.opts.gwNamespace", rCopiedStore)));
 		assertEquals("spatial", CmdUtils.getProperty(configList, String.format("index.%s.type", rIndex)));
 		
-		// Cache Data
+		// Analyze Data
 		TestUtils.assertSuccess(CmdUtils.send(cacheGermany));
 		TestUtils.assertSuccess(CmdUtils.send(cacheBerlin));
-		
-		// Verify
-		// TODO
 		
 		// Ingest Data
 		TestUtils.assertSuccess(CmdUtils.send(ld_library_path, ingestBerlin));

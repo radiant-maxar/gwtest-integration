@@ -52,20 +52,22 @@ public class HelloTest {
 	// Environment Variables
 	private String[] hadoop_home = {"HADOOP_HOME=/usr/hdp/2.6.0.3-8/hadoop/"};
 	private String[] ld_library_path = {"LD_LIBRARY_PATH=/mnt"};
+
+	//TODO - Remove comment from @Before.
 	
-	@Before
-	public void setUp() throws Exception {
-		// Verify no data in GS:
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "{\"layers\": []}"));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), "[]"));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), "[]"));
-		
-		// Verify there is no ingested data:
-		for (String store : new String[]{vStoreKDE, vStore, rStore, rCopiedStore}) {
-			assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave remote liststats " + store), "exception"));
-		}
-		
-	}
+//	@Before
+//	public void setUp() throws Exception {
+//		// Verify no data in GS:
+//		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "{\"layers\": []}"));
+//		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), "[]"));
+//		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), "[]"));
+//		
+//		// Verify there is no ingested data:
+//		for (String store : new String[]{vStoreKDE, vStore, rStore, rCopiedStore}) {
+//			assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave remote liststats " + store), "exception"));
+//		}
+//		
+//	}
 
 	@After
 	public void tearDown() throws Exception {

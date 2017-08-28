@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 sudo -u hdfs hdfs dfs -mkdir /apps/hbase/data/lib
 sudo -u hdfs hdfs dfs -mv /user/hbase/lib/geowave-hbase-0.9.5-hdp2.jar /apps/hbase/data/lib/geowave-hbase-0.9.5-hdp2.jar
 cd /etc/hbase/conf

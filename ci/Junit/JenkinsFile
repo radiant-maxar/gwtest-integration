@@ -9,7 +9,7 @@ pipeline {
 	stages {
 		stage('Build') {
 			steps{
-				echo 'This is where GW is created'
+				sh 'ci/Junit/installGW.sh'
 			}
 		}
 		stage('Setup') {

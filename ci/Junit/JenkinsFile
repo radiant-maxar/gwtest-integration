@@ -9,7 +9,10 @@ pipeline {
 	stages {
 		stage('Build') {
 			steps{
-				sh 'ci/Junit/installGW.sh'
+				sh '''
+				chmod 555 ci/Junit/installGW.sh
+				ci/Junit/installGW.sh
+				'''
 			}
 		}
 		stage('Setup') {

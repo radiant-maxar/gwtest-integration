@@ -2,6 +2,20 @@
 
 set -e
 
+yum install -y http://s3.amazonaws.com/geowave-rpms/release/noarch/geowave-repo-1.0-3.noarch.rpm
+cat << EOF >> /tmp/geowave.pp
+class { 'geowave::repo': repo_base_url => 'http://s3.amazonaws.com/geowave-rpms/release/noarch/', repo_enabled => 1, } ->
+class { 'geowave':
+geowave_version       => '0.9.5',
+hadoop_vendor_version => 'hdp2',
+install_hbase      => true,
+install_app           => true,
+install_app_server    => true,
+http_port             => '8993',
+EOF
+yum -y --enablerepo=geowave install geowave-0.9.5-puppet.noarch >> /var/geowave_install.log
+sh -c "puppet apply /tmp/geowave.pp"
+
 sudo -u hdfs hdfs dfs -mkdir /apps/hbase/data/lib
 sudo -u hdfs hdfs dfs -mv /user/hbase/lib/geowave-hbase-0.9.5-hdp2.jar /apps/hbase/data/lib/geowave-hbase-0.9.5-hdp2.jar
 cd /etc/hbase/conf

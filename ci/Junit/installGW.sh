@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -e -x
 
 yum install -y http://s3.amazonaws.com/geowave-rpms/release/noarch/geowave-repo-1.0-3.noarch.rpm
 cat << EOF >> /tmp/geowave.pp

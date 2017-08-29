@@ -1,15 +1,11 @@
 #!/bin/bash
 
 set -e -x
-if yum list installed "$@" >/dev/null 2>&1; then
+if yum list installed "geowave-rpms" >/dev/null 2>&1; then
 	echo "geowave RPM already installed."
 else
 	sudo yum install -y http://s3.amazonaws.com/geowave-rpms/release/noarch/geowave-repo-1.0-3.noarch.rpm
 fi
-
-ls /tmp
-ls /tmp/geowave
-ls /tmp/geowave/repo
 
 cat << EOF > /tmp/geowave.pp
 class { 'geowave::repo': repo_base_url => 'http://s3.amazonaws.com/geowave-rpms/release/noarch/', repo_enabled => 1, } ->

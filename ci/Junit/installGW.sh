@@ -16,6 +16,7 @@ install_hbase      => true,
 install_app           => true,
 install_app_server    => true,
 http_port             => '8993',
+}
 EOF
 sudo yum -y --enablerepo=geowave install geowave-0.9.5-puppet.noarch >> /dev/null
 sh -c "puppet apply /tmp/geowave.pp"

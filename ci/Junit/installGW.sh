@@ -23,10 +23,12 @@ http_port             => '8993',
 EOF
 
 if yum list installed "geowave-0.9.5-puppet.noarch" >/dev/null 2>&1; then
-	echo "geowave RPM already installed."
+	echo "geowave puppet already installed."
 else
 	sudo yum -y --enablerepo=geowave install geowave-0.9.5-puppet.noarch >> /dev/null
 fi
+
+export PATH=/opt/puppetlabs/bin:$PATH
 
 sh -c "puppet apply /tmp/geowave.pp"
 

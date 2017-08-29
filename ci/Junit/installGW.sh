@@ -4,7 +4,7 @@ set -e -x
 
 yum list installed
 
-if yum list installed "geowave-repo-1.0-3" >/dev/null 2>&1; then
+if yum list installed "geowave-repo.noarch" >/dev/null 2>&1; then
 	echo "geowave RPM already installed."
 else
 	sudo yum install -y http://s3.amazonaws.com/geowave-rpms/release/noarch/geowave-repo-1.0-3.noarch.rpm
@@ -21,7 +21,13 @@ install_app_server    => true,
 http_port             => '8993',
 }
 EOF
-sudo yum -y --enablerepo=geowave install geowave-0.9.5-puppet.noarch >> /dev/null
+
+if yum list installed "geowave-0.9.5-puppet.noarch" >/dev/null 2>&1; then
+	echo "geowave RPM already installed."
+else
+	sudo yum -y --enablerepo=geowave install geowave-0.9.5-puppet.noarch >> /dev/null
+fi
+
 sh -c "puppet apply /tmp/geowave.pp"
 
 sudo -u hdfs hdfs dfs -mkdir /apps/hbase/data/lib

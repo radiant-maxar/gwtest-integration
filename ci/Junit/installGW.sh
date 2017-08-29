@@ -7,6 +7,10 @@ else
 	sudo yum install -y http://s3.amazonaws.com/geowave-rpms/release/noarch/geowave-repo-1.0-3.noarch.rpm
 fi
 
+ls
+ls geowave
+ls geowave/repo
+
 cat << EOF > /tmp/geowave.pp
 class { 'geowave::repo': repo_base_url => 'http://s3.amazonaws.com/geowave-rpms/release/noarch/', repo_enabled => 1, } ->
 class { 'geowave':

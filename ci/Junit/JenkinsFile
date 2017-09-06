@@ -2,12 +2,9 @@
 
 pipeline {
 	agent any
-	tools {
-    }
 	stages {
 		stage('Create EMR') {
 			steps{
-				println org.codehaus.groovy.runtime.InvokerHelper.version
 				sh '''
 				source ci/createcluster.sh
 				'''

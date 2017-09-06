@@ -1,3 +1,5 @@
+#!/bin/bash -xe
+
 NUM_WORKERS=4
 KEYNAME="testkey"
 MAC=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/)

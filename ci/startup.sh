@@ -1,3 +1,5 @@
+#!/bin/bash -xe
+
 # Install maven.
 
 wget http://mirror.stjschools.org/public/apache/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz

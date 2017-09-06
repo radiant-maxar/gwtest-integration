@@ -1,3 +1,5 @@
+#!/bin/bash -xe
+
 # Clone test repo
 git clone https://github.com/venicegeo/gwtest-integration.git /home/hadoop/gwtest-integration
 

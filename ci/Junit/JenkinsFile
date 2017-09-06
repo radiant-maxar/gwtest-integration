@@ -15,24 +15,24 @@ pipeline {
 				source ci/createcluster.sh
 				'''
 				script {
-					DOMAIN=readFile('DOMAIN')
-					KEYNAME=readFile('KEYNAME')
-					CLUSTER_ID=readFile('CLUSTER_ID')
-					REGION=readFile('REGION')
+					env.DOMAIN=readFile('DOMAIN')
+					env.KEYNAME=readFile('KEYNAME')
+					env.CLUSTER_ID=readFile('CLUSTER_ID')
+					env.REGION=readFile('REGION')
 				}
 			}
 		}
 		stage('Setup') {
 			steps{
 				sh '''
-				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
+				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${env.KEYNAME}.pem hadoop@${env.DOMAIN} < ci/startup.sh
 				'''
 			}
 		}
 		stage('Test') {
 			steps{
 				sh '''
-				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests.sh
+				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${env.KEYNAME}.pem hadoop@${env.DOMAIN} < ci/runtests.sh
 				'''
 			}
 		}
@@ -40,7 +40,7 @@ pipeline {
 	post {
 		always {
 			sh '''
-			aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+			aws emr terminate-clusters --cluster-ids ${env.CLUSTER_ID} --region ${env.REGION}
 			'''
 		}
 	}

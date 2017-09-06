@@ -7,6 +7,7 @@ pipeline {
 	stages {
 		stage('Create EMR') {
 			steps{
+				println GroovySystem.version
 				sh '''
 				source ci/createcluster.sh
 				'''

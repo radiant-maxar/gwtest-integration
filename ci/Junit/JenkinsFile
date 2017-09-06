@@ -1,11 +1,11 @@
 #!/usr/bin/env groovy
 
 pipeline {
-	environment {
-		DOMAIN="unset"
-		KEYNAME="unset"
-		CLUSTER_ID="unset"
-		REGION="unset"
+	parameters {
+		string(name: 'DOMAIN', defaultValue: 'unset')
+		string(name: 'KEYNAME', defaultValue: 'unset')
+		string(name: 'CLUSTER_ID', defaultValue: 'unset')
+		string(name: 'REGION', defaultValue: 'unset')
 	}
 	agent any
 	stages {
@@ -15,24 +15,24 @@ pipeline {
 				source ci/createcluster.sh
 				'''
 				script {
-					env.DOMAIN=readFile('DOMAIN')
-					env.KEYNAME=readFile('KEYNAME')
-					env.CLUSTER_ID=readFile('CLUSTER_ID')
-					env.REGION=readFile('REGION')
+					params.DOMAIN=readFile('DOMAIN')
+					params.KEYNAME=readFile('KEYNAME')
+					params.CLUSTER_ID=readFile('CLUSTER_ID')
+					params.REGION=readFile('REGION')
 				}
 			}
 		}
 		stage('Setup') {
 			steps{
 				sh '''
-				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${env.KEYNAME}.pem hadoop@${env.DOMAIN} < ci/startup.sh
+				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${params.KEYNAME}.pem hadoop@${params.DOMAIN} < ci/startup.sh
 				'''
 			}
 		}
 		stage('Test') {
 			steps{
 				sh '''
-				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${env.KEYNAME}.pem hadoop@${env.DOMAIN} < ci/runtests.sh
+				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${params.KEYNAME}.pem hadoop@${params.DOMAIN} < ci/runtests.sh
 				'''
 			}
 		}
@@ -40,7 +40,7 @@ pipeline {
 	post {
 		always {
 			sh '''
-			aws emr terminate-clusters --cluster-ids ${env.CLUSTER_ID} --region ${env.REGION}
+			aws emr terminate-clusters --cluster-ids ${params.CLUSTER_ID} --region ${params.REGION}
 			'''
 		}
 	}

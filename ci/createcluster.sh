@@ -1,19 +1,20 @@
 #!/bin/bash -xe
 
-export NUM_WORKERS=4
-export KEYNAME="testkey"
-export MAC=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/)
-export SUBNET_ID=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/subnet-id)
-export MASTER_SECURITY_GROUP=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/security-group-ids)
-export SLAVE_SECURITY_GROUP=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/security-group-ids)
-export EMR_VERSION="emr-5.6.0"
-export TAGNAME=""
-export REGION="us-east-1"
-export VERSION="latest"
-export CLUSTER_NAME="temp-gw-test-cluster-pipeline"
+# Get variables
+NUM_WORKERS=4
+KEYNAME="testkey"
+MAC=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/)
+SUBNET_ID=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/subnet-id)
+MASTER_SECURITY_GROUP=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/security-group-ids)
+SLAVE_SECURITY_GROUP=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/security-group-ids)
+EMR_VERSION="emr-5.6.0"
+TAGNAME=""
+REGION="us-east-1"
+VERSION="latest"
+CLUSTER_NAME="temp-gw-test-cluster-pipeline"
 
-
-export CLUSTER_ID=$(aws emr create-cluster \
+# Create cluster
+CLUSTER_ID=$(aws emr create-cluster \
 --name ${CLUSTER_NAME} \
 --ec2-attributes "KeyName=${KEYNAME},SubnetId=${SUBNET_ID},EmrManagedMasterSecurityGroup=${MASTER_SECURITY_GROUP},EmrManagedSlaveSecurityGroup=${SLAVE_SECURITY_GROUP}" \
 --release-label ${EMR_VERSION} \
@@ -25,5 +26,14 @@ InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{In
 --bootstrap-action Path=s3://geowave/latest/scripts/emr/quickstart/hbase/bootstrap-geowave.sh \
 --region ${REGION} | jq .ClusterId | tr -d '"')
 
+# Wait until cluster has been created
 aws emr wait cluster-running --cluster-id ${CLUSTER_ID} --region ${REGION}
-export DOMAIN=$(aws emr describe-cluster --cluster-id ${CLUSTER_ID} --region ${REGION} | jq .Cluster.MasterPublicDnsName | tr -d '"')
+
+# Get cluster domain
+DOMAIN=$(aws emr describe-cluster --cluster-id ${CLUSTER_ID} --region ${REGION} | jq .Cluster.MasterPublicDnsName | tr -d '"')
+
+# Write variables to files
+echo "$DOMAIN" > DOMAIN
+echo "$KEYNAME" > KEYNAME
+echo "$CLUSTER_ID" > CLUSTER_ID
+echo "$REGION" > REGION

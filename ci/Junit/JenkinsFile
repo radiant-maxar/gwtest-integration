@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 
 pipeline {
+	def domain = ''
 	agent any
 	stages {
 		stage('Create EMR') {
@@ -8,6 +9,10 @@ pipeline {
 				sh '''
 				source ci/createcluster.sh
 				'''
+				DOMAIN=readFile('DOMAIN')
+				KEYNAME=readFile('KEYNAME')
+				CLUSTER_ID=readFile('CLUSTER_ID')
+				REGION=readFile('REGION')
 			}
 		}
 		stage('Setup') {
@@ -24,12 +29,12 @@ pipeline {
 				'''
 			}
 		}
-		stage('Terminate Cluster') {
-			steps {
-				sh '''
-				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
-				'''
-			}
+	}
+	post {
+		always {
+			sh '''
+			aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+			'''
 		}
 	}
 }

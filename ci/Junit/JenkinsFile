@@ -7,7 +7,7 @@ pipeline {
 	stages {
 		stage('Create EMR') {
 			steps{
-				println GroovySystem.version
+				println org.codehaus.groovy.runtime.InvokerHelper.version
 				sh '''
 				source ci/createcluster.sh
 				'''

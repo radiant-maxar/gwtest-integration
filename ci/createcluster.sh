@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 # Get variables
-NUM_WORKERS=4
+NUM_WORKERS=1 # Put back to 4 later
 KEYNAME="testkey"
 MAC=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/)
 SUBNET_ID=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/subnet-id)
@@ -34,6 +34,10 @@ DOMAIN=$(aws emr describe-cluster --cluster-id ${CLUSTER_ID} --region ${REGION} 
 
 # Write variables to files
 echo "$DOMAIN" > DOMAIN
+sudo chmod 666 DOMAIN
 echo "$KEYNAME" > KEYNAME
+sudo chmod 666 KEYNAME
 echo "$CLUSTER_ID" > CLUSTER_ID
+sudo chmod 666 CLUSTER_ID
 echo "$REGION" > REGION
+sudo chmod 666 REGION

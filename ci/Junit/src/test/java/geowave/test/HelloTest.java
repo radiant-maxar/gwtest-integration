@@ -94,17 +94,17 @@ public class HelloTest {
 		System.out.println("THIS IS PASSING");
 	}
 
-	@Test @Ignore
+	@Test
 	public void version() {
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave --version"), "version"));
 	}
 
-	@Test @Ignore
+	@Test
 	public void usage() {
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave"), "usage"));
 	}
 
-	@Test @Ignore
+	@Test
 	public void vector_happyPath() {
 		// Create store/index
 		TestUtils.assertSuccess(CmdUtils.send(addStore));
@@ -166,7 +166,7 @@ public class HelloTest {
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverageKDE), "styleName_kde"));
 	}
 	
-	@Test @Ignore
+	@Test
 	public void raster_happyPath() {
 		// Add stores and index
 		TestUtils.assertSuccess(CmdUtils.send(addStore_raster));

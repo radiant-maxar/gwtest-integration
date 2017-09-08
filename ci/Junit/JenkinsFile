@@ -6,15 +6,17 @@ pipeline {
 		stage('Create EMR') {
 			steps{
 				sh '''
-				code=0
 				source ci/createcluster.sh
 				{
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
-					((code+=$?))
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests.sh
-					((code+=$?))
+					code=0
+				} || {
+					echo "there was a failure"
+					code=1 
+				} && {
+					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
 				}
-				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
 				exit $code
 				'''
 			}

@@ -7,9 +7,17 @@ pipeline {
 			steps{
 				sh '''
 				source ci/createcluster.sh
-				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
-				ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests.sh
-				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+				{
+					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
+					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests.sh
+					status=0
+				} || {
+					echo "a failure"
+					status=1
+				} && {
+					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+				}
+				exit $status
 				'''
 			}
 		}

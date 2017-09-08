@@ -107,6 +107,7 @@ public class HelloTest {
 
 	@Test
 	public void vector_happyPath() {
+		assertTrue(TestUtils.tryUntilOK("http://localhost:8993/geoserver/web/", 240));
 		// Create store/index
 		TestUtils.assertSuccess(CmdUtils.send(addStore));
 		TestUtils.assertSuccess(CmdUtils.send(addIndex));
@@ -169,6 +170,7 @@ public class HelloTest {
 	
 	@Test
 	public void raster_happyPath() {
+		assertTrue(TestUtils.tryUntilOK("http://localhost:8993/geoserver/web/", 240));
 		// Add stores and index
 		TestUtils.assertSuccess(CmdUtils.send(addStore_raster));
 		TestUtils.assertSuccess(CmdUtils.send(copyStore_raster));

@@ -12,7 +12,7 @@ pipeline {
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
 					code=$?
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests.sh
-					code=$code+$?
+					code+=$?
 					exit $code
 				} || {
 					echo "a failure"

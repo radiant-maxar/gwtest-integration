@@ -191,6 +191,11 @@ public class HelloTest {
 		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + rStore));
 		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + rCopiedStore)); // Should not have exception if ingest was successful.
 		
+		// Start Geoserver
+		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8000", hostname)));
+		TestUtils.assertSuccess(CmdUtils.send("service geowave restart"));
+		assertTrue(TestUtils.tryUntilOK("http://localhost:8000/geoserver/web/", 240));
+		
 		// Add First Layer
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + rStore));
 		

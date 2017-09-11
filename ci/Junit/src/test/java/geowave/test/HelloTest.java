@@ -134,7 +134,7 @@ public class HelloTest {
 		// Start Geoserver
 		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8993", hostname)));
 		TestUtils.assertSuccess(CmdUtils.send("service geowave restart"));
-		assertTrue(TestUtils.tryUntilOK("http://localhost:8993/geoserver/web/", 240));
+		assertTrue(TestUtils.tryUntilOK("http://localhost:8000/geoserver/web/", 240));
 		
 		// Add Vector Layer
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + vStore));

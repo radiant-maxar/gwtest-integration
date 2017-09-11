@@ -37,6 +37,8 @@ public class TestUtils {
 			c.setRequestMethod("HEAD");
 			c.connect();
 			int code = c.getResponseCode();
+			System.out.println(code);
+			System.out.println(c.getResponseMessage());
 			return code;
 		} catch (IOException e) {
 			return 0;

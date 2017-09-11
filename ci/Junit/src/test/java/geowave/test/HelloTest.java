@@ -132,7 +132,7 @@ public class HelloTest {
 		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + vStore)); // Should not have exception if KDE was successful.
 		
 		// Start Geoserver
-		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8993", hostname)));
+		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8000", hostname)));
 		TestUtils.assertSuccess(CmdUtils.send("service geowave restart"));
 		assertTrue(TestUtils.tryUntilOK("http://localhost:8000/geoserver/web/", 240));
 		

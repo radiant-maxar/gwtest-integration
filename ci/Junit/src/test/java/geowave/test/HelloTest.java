@@ -136,6 +136,10 @@ public class HelloTest {
 		// Verify
 		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + vStore)); // Should not have exception if KDE was successful.
 		
+		// Debugging addlayer failure
+		CmdUtils.send(hadoop_home, "geowave remote listadapters " + vStoreKDE);
+		CmdUtils.send(hadoop_home, "geowave remote listadapters " + vStore);
+		
 		// Add Vector Layer
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + vStore));
 		

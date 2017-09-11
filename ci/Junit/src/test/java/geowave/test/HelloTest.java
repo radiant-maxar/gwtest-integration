@@ -124,17 +124,17 @@ public class HelloTest {
 		
 		// Verify
 		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + vStore)); // Should not have exception if ingest was successful.
+
+		// Start Geoserver
+		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8000", hostname)));
+		TestUtils.assertSuccess(CmdUtils.send("service geowave restart"));
+		assertTrue(TestUtils.tryUntilOK("http://localhost:8000/geoserver/web/", 240));
 		
 		// Run a Kernel Density Estimation
 		TestUtils.assertSuccess(CmdUtils.send(runKDE));
 		
 		// Verify
 		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + vStore)); // Should not have exception if KDE was successful.
-		
-		// Start Geoserver
-		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8000", hostname)));
-		TestUtils.assertSuccess(CmdUtils.send("service geowave restart"));
-		assertTrue(TestUtils.tryUntilOK("http://localhost:8000/geoserver/web/", 240));
 		
 		// Add Vector Layer
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + vStore));

@@ -56,8 +56,9 @@ public class HelloTest {
 
 	//TODO - Remove comment from @Before.
 	
-//	@Before
-//	public void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TestUtils.assertSuccess(CmdUtils.send("geowave --version"));
 //		// Verify no data in GS:
 //		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "{\"layers\": []}"));
 //		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), "[]"));
@@ -68,7 +69,7 @@ public class HelloTest {
 //			assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave remote liststats " + store), "exception"));
 //		}
 //		
-//	}
+	}
 
 	@After
 	public void tearDown() throws Exception {

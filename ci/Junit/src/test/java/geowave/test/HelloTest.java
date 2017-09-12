@@ -138,7 +138,7 @@ public class HelloTest {
 		
 		// Debugging addlayer failure
 		for (int i=1; i<11; i++) {
-			System.out.println("Try " + i + ": " + CmdUtils.send(hadoop_home, "geowave remote listadapters " + vStoreKDE));
+			System.out.println("Try " + i + ": " + CmdUtils.send(hadoop_home, "geowave remote listadapter " + vStoreKDE));
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {

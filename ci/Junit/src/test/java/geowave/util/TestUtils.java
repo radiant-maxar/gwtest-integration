@@ -19,12 +19,13 @@ public class TestUtils {
 	public static void assertSuccess(String response) {
 		assertNotNull("Response should not be null", response);
 		if (insensitiveMatch(response, "exception")) {
-			System.out.println("R: " + response);
+			System.out.println("R <EXCEPTION>: " + response);
 			fail("Response should not contain exception");
 		} else if (insensitiveMatch(response, "error")){
-			System.out.println("R: " + response);
+			System.out.println("R <ERROR>: " + response);
 //			fail("Response should not contain error");
 		} else {
+			System.out.println("R <SUCCESS>:" + response); // always print response, for debugging
 			// pass
 		}
 	}

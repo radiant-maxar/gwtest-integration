@@ -132,7 +132,7 @@ public class HelloTest {
 		assertTrue(TestUtils.tryUntilOK("http://localhost:8000/geoserver/web/", 240));
 		
 		// Run a Kernel Density Estimation
-		TestUtils.assertSuccess(CmdUtils.send(runKDE));
+		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, runKDE));
 		
 		// Verify
 		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + vStore)); // Should not have exception if KDE was successful.

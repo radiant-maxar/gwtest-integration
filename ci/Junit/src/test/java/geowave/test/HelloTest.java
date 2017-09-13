@@ -2,6 +2,7 @@ package geowave.test;
 
 import static org.junit.Assert.*;
 
+import java.net.InetAddress;
 import java.util.Scanner;
 
 import org.junit.After;
@@ -14,8 +15,14 @@ import geowave.util.TestUtils;
 
 public class HelloTest {
 	
-	private String hostname = CmdUtils.send("echo $HOSTNAME");
-
+	private static String hostname;
+	static {
+		try {
+			hostname = InetAddress.getLocalHost().getHostName();
+		} catch (Exception e) {
+			hostname = "localhost";
+		}
+	}
 	
 	Scanner s;
 	// Names:

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.IOUtils;
 import org.json.*;
 
 
@@ -23,11 +24,12 @@ public class CmdUtils {
 		}
 		System.out.println("C: " + Arrays.toString(cmd));
 		InputStream is = p.getInputStream();
-		Scanner s = new Scanner(is);
-		s.useDelimiter("\\A");
-		String response = s.hasNext() ? s.next() : "";
-		s.close();
-		return response;
+		try {
+			return IOUtils.toString(is, "UTF-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	public static String send(String... cmd) {
 		// Default wait 1 minute.

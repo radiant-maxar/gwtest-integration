@@ -99,11 +99,6 @@ public class HelloTest {
 		CmdUtils.send("geowave gs rmcs " + vStoreKDE + "-raster");
 		CmdUtils.send("geowave gs rmcs " + rStore + "-raster");
 	}
-	
-	@Test
-	public void always_pass() {
-		System.out.println("THIS IS PASSING");
-	}
 
 	@Test
 	public void version() {

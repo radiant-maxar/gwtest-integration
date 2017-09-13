@@ -112,6 +112,7 @@ public class HelloTest {
 
 	@Test
 	public void vector_happyPath() {
+		TestUtils.assertSuccess(CmdUtils.send("script foo.text"));
 		
 		// Create store/index
 		TestUtils.assertSuccess(CmdUtils.send(addStore));
@@ -171,6 +172,9 @@ public class HelloTest {
 		// Verify
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverage), "styleName_sub"));
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverageKDE), "styleName_kde"));
+
+		TestUtils.assertSuccess(CmdUtils.send("exit"));
+		TestUtils.assertSuccess(CmdUtils.send("cat foo.txt"));
 	}
 	
 	@Test

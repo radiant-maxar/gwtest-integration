@@ -136,6 +136,8 @@ public class HelloTest {
 		TestUtils.assertSuccess(CmdUtils.send("sudo service geowave restart"));
 		assertTrue(TestUtils.tryUntilOK(String.format("http://%s:8000/geoserver/web/", hostname), 240));
 		
+		TestUtils.assertSuccess(CmdUtils.send("script foo.txt"));
+		
 		// Run a Kernel Density Estimation
 		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, runKDE));
 		
@@ -171,6 +173,9 @@ public class HelloTest {
 		// Verify
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverage), "styleName_sub"));
 		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverageKDE), "styleName_kde"));
+		
+
+		TestUtils.assertSuccess(CmdUtils.send("cat foo.txt"));
 	}
 	
 	@Test

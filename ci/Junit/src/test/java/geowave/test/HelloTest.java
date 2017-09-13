@@ -128,7 +128,7 @@ public class HelloTest {
 
 		// Start Geoserver
 		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8000", hostname)));
-		TestUtils.assertSuccess(CmdUtils.send("service geowave restart"));
+		TestUtils.assertSuccess(CmdUtils.send("sudo service geowave restart"));
 		assertTrue(TestUtils.tryUntilOK("http://localhost:8000/geoserver/web/", 240));
 		
 		// Run a Kernel Density Estimation
@@ -194,7 +194,7 @@ public class HelloTest {
 		
 		// Start Geoserver
 		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8000", hostname)));
-		TestUtils.assertSuccess(CmdUtils.send("service geowave restart"));
+		TestUtils.assertSuccess(CmdUtils.send("sudo service geowave restart"));
 		assertTrue(TestUtils.tryUntilOK("http://localhost:8000/geoserver/web/", 240));
 		
 		// Add First Layer

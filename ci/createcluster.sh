@@ -21,6 +21,7 @@ CLUSTER_ID=$(aws emr create-cluster \
 --applications Name=Hadoop Name=HBase \
 --use-default-roles \
 --no-auto-terminate \
+--log-uri s3://temp-logs-james \
 --instance-fleets InstanceFleetType=MASTER,TargetOnDemandCapacity=1,InstanceTypeConfigs=['{InstanceType=m4.xlarge}'] \
 InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=SWITCH_TO_ON_DEMAND}'} \
 --bootstrap-action Path=s3://geowave/latest/scripts/emr/quickstart/hbase/bootstrap-geowave.sh \

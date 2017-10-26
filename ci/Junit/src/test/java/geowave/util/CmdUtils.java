@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -17,8 +18,7 @@ public class CmdUtils {
 	// Send a command, and get the response back.
 	// TODO: Timeout
 	public static String send(int timeout, String[] cmd, String... vars) {
-		String[] java_home = {"JAVA_HOME=" + System.getenv("JAVA_HOME")};
-		String[] all_vars = (String[]) ArrayUtils.addAll(vars, java_home);
+		String[] all_vars = (String[]) ArrayUtils.addAll(vars, environment());
 		Process p;
 		try {
 			p = createCmdProcess(cmd, all_vars);
@@ -28,13 +28,8 @@ public class CmdUtils {
 		}
 		System.out.println("C: " + Arrays.toString(cmd));
 		InputStream is = p.getInputStream();
-		OutputStream os = p.getOutputStream();
-		InputStream es = p.getErrorStream();
 		try {
 			String output = IOUtils.toString(is, "UTF-8");
-			System.out.println("IS: " + output);
-			System.out.println("OS (to String): " + os.toString());
-			System.out.println("ES: " + IOUtils.toString(es, "UTF-8"));
 			return output;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -101,5 +96,15 @@ public class CmdUtils {
 		}
 	}
 	
+	private static String[] environment() {
+		Map<String, String> env = System.getenv();
+		String[] outputEnvironemnt = new String[env.size()];
+		int i=0;
+		for (String envName : env.keySet()) {
+			outputEnvironemnt[i] = String.format("%s=%s%n", envName, env.get(envName));
+			i++;
+		}
+		return outputEnvironemnt;
+	}
 	
 }

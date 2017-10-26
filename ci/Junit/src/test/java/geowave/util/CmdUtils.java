@@ -25,7 +25,9 @@ public class CmdUtils {
 		System.out.println("C: " + Arrays.toString(cmd));
 		InputStream is = p.getInputStream();
 		try {
-			return IOUtils.toString(is, "UTF-8");
+			String output = IOUtils.toString(is, "UTF-8");
+			System.out.println("R: " + output);
+			return output;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

@@ -111,6 +111,11 @@ public class HelloTest {
 	}
 
 	@Test
+	public void help() {
+		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave help raster"), "usage: geowave raster"));
+	}
+
+	@Test
 	public void vector_happyPath() {
 		
 		// Create store/index

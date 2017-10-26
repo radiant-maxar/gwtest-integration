@@ -24,7 +24,7 @@ CLUSTER_ID=$(aws emr create-cluster \
 --log-uri s3://temp-logs-james \
 --instance-fleets InstanceFleetType=MASTER,TargetOnDemandCapacity=1,InstanceTypeConfigs=['{InstanceType=m4.xlarge}'] \
 InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=SWITCH_TO_ON_DEMAND}'} \
---bootstrap-action Path=s3://geowave/0.9.5/scripts/emr/hbase/bootstrap-geowave.sh \
+--bootstrap-action Path=s3://geowave/latest/scripts/emr/hbase/bootstrap-geowave.sh \
 --region ${REGION} | jq .ClusterId | tr -d '"')
 
 # Wait until cluster has been created

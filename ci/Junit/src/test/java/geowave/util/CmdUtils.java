@@ -2,6 +2,7 @@ package geowave.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -24,12 +25,18 @@ public class CmdUtils {
 		}
 		System.out.println("C: " + Arrays.toString(cmd));
 		InputStream is = p.getInputStream();
-		Scanner s = new Scanner(is);
-		s.useDelimiter("\\A");
-		String response = s.hasNext() ? s.next() : "";
-		System.out.println("R: " + response);
-		s.close();
-		return response;
+		OutputStream os = p.getOutputStream();
+		InputStream es = p.getErrorStream();
+		try {
+			String output = IOUtils.toString(is, "UTF-8");
+			System.out.println("IS: " + output);
+			System.out.println("OS (to String): " + os.toString());
+			System.out.println("ES: " + IOUtils.toString(es, "UTF-8"));
+			return output;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	public static String send(String... cmd) {
 		// Default wait 1 minute.

@@ -14,9 +14,9 @@ sudo yum -y install git
 
 # Get GW scripts
 cd /mnt
-sudo wget s3.amazonaws.com/geowave/0.9.5/scripts/sandbox/quickstart/geowave-env.sh
-sudo wget s3.amazonaws.com/geowave/0.9.5/scripts/emr/quickstart/KDEColorMap.sld
-sudo wget s3.amazonaws.com/geowave/0.9.5/scripts/emr/quickstart/SubsamplePoints.sld
+sudo wget s3.amazonaws.com/geowave/latest/scripts/sandbox/quickstart/geowave-env.sh
+sudo wget s3.amazonaws.com/geowave/latest/scripts/emr/quickstart/KDEColorMap.sld
+sudo wget s3.amazonaws.com/geowave/latest/scripts/emr/quickstart/SubsamplePoints.sld
 source /mnt/geowave-env.sh
 
 # Get gdelt data

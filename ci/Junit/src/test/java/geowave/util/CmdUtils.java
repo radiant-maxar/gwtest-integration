@@ -17,7 +17,8 @@ public class CmdUtils {
 	// Send a command, and get the response back.
 	// TODO: Timeout
 	public static String send(int timeout, String[] cmd, String... vars) {
-		String[] all_vars = (String[]) ArrayUtils.addAll(vars, new String[]{System.getenv("JAVA_HOME")});
+		String[] java_home = {"JAVA_HOME=" + System.getenv("JAVA_HOME")};
+		String[] all_vars = (String[]) ArrayUtils.addAll(vars, java_home);
 		Process p;
 		try {
 			p = createCmdProcess(cmd, all_vars);

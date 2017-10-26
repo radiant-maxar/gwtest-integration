@@ -97,11 +97,12 @@ public class CmdUtils {
 	}
 	
 	private static String[] environment() {
-		Map<String, String> env = System.getenv();
+		Map<String, String> env = System.getenv(); // This didn't work.
 		String[] outputEnvironemnt = new String[env.size()];
 		int i=0;
 		for (String envName : env.keySet()) {
 			outputEnvironemnt[i] = String.format("%s=%s%n", envName, env.get(envName));
+			System.out.println(outputEnvironemnt[i]);
 			i++;
 		}
 		return outputEnvironemnt;

@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.json.*;
 
 
@@ -16,9 +17,10 @@ public class CmdUtils {
 	// Send a command, and get the response back.
 	// TODO: Timeout
 	public static String send(int timeout, String[] cmd, String... vars) {
+		String[] all_vars = (String[]) ArrayUtils.addAll(vars, new String[]{System.getenv("JAVA_HOME")});
 		Process p;
 		try {
-			p = createCmdProcess(cmd, vars);
+			p = createCmdProcess(cmd, all_vars);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

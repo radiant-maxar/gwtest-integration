@@ -61,7 +61,6 @@ public class HelloTest {
 	// Environment Variables
 	private String[] hadoop_home = {"HADOOP_HOME=/usr/hdp/2.6.0.3-8/hadoop/"};
 	private String[] ld_library_path = {"LD_LIBRARY_PATH=/mnt"};
-
 	//TODO - Remove comment from @Before.
 	
 	@Before

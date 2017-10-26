@@ -101,8 +101,7 @@ public class CmdUtils {
 		String[] outputEnvironemnt = new String[env.size()];
 		int i=0;
 		for (String envName : env.keySet()) {
-			outputEnvironemnt[i] = String.format("%s=%s%n", envName, env.get(envName));
-			System.out.println(outputEnvironemnt[i]);
+			outputEnvironemnt[i] = String.format("%s=%s", envName, env.get(envName));
 			i++;
 		}
 		return outputEnvironemnt;

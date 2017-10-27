@@ -52,7 +52,7 @@ public class HelloTest {
 	private String addStore_KDE = String.format("geowave config addstore %s --gwNamespace %s -t hbase --zookeeper %s:2181", vStoreKDE, vSpaceKDE, hostname);
 	private String addIndex = String.format("geowave config addindex -t spatial %s --partitionStrategy round_robin --numPartitions 32", vIndex);
 	private String[] ingestGermany = {"geowave", "ingest", "localtogw", "/mnt/gdelt", vStore, vIndex, "-f", "gdelt", "--gdelt.cql",  "INTERSECTS(geometry," + germany + ")"};
-	private String runKDE = String.format("hadoop jar /usr/local/geowave-0.9.6-apache/tools/geowave-tools-0.9.6-apache.jar analytic kde --featureType gdeltevent --minLevel 5 --maxLevel 26 --minSplits 32 --maxSplits 32 --coverageName %s --hdfsHostPort %s:8020 --jobSubmissionHostPort %s:8032 --tileSize 1 %s %s", vCoverageKDE, hostname, hostname, vStore, vStoreKDE);
+	private String runKDE = String.format("geowave analytic kde --featureType gdeltevent --minLevel 5 --maxLevel 26 --minSplits 32 --maxSplits 32 --coverageName %s --hdfsHostPort %s:8020 --jobSubmissionHostPort %s:8032 --tileSize 1 %s %s", vCoverageKDE, hostname, hostname, vStore, vStoreKDE);
 	
 	private String addStore_raster = String.format("geowave config addstore -t hbase -z %s:2181 %s --gwNamespace %s", hostname, rStore, rSpace);
 	private String copyStore_raster = String.format("geowave config cpstore %s %s --gwNamespace %s", rStore, rCopiedStore, rSpaceCopy);

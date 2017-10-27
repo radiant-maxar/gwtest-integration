@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import geowave.util.CmdUtils;
+import geowave.util.Cmd;
 import geowave.util.TestUtils;
 
 public class HelloTest {
@@ -25,6 +25,9 @@ public class HelloTest {
 	}
 	
 	Scanner s;
+	
+	Cmd cmd;
+	
 	// Names:
 	private String vStore = "gdelt";
 	private String vStoreKDE = "gdelt-kde";
@@ -65,7 +68,8 @@ public class HelloTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		TestUtils.assertSuccess(CmdUtils.send("geowave --version"));
+		cmd = new Cmd();
+		TestUtils.assertSuccess(cmd.send("geowave --version"));
 		System.out.println("Using HOSTNAME = " + hostname);
 //		// Verify no data in GS:
 //		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "{\"layers\": []}"));
@@ -82,143 +86,143 @@ public class HelloTest {
 	@After
 	public void tearDown() throws Exception {
 		for (String store : new String[]{vStoreKDE, vStore, rStore, rCopiedStore}) {
-			CmdUtils.send("geowave remote clear " + store);
-			CmdUtils.send("geowave config rmstore " + store);
+			cmd.send("geowave remote clear " + store);
+			cmd.send("geowave config rmstore " + store);
 		}
 		for (String index : new String[]{vIndex, rIndex}) {
-			CmdUtils.send("geowave config rmindex " + index);
+			cmd.send("geowave config rmindex " + index);
 		}
 		for (String layer : new String[]{vCoverage, vCoverageKDE, rCoverage, "band", "scene"}) {
-			CmdUtils.send("geowave gs rmfl " + layer);
+			cmd.send("geowave gs rmfl " + layer);
 		}
-		CmdUtils.send("geowave gs rmstyle styleName_sub");
-		CmdUtils.send("geowave gs rmstyle styleName_kde");
-		CmdUtils.send("geowave gs rmds " + vStore + "-vector");
-		CmdUtils.send("geowave gs rmds " + rCopiedStore + "-vector");
-		CmdUtils.send("geowave gs rmcs " + vStoreKDE + "-raster");
-		CmdUtils.send("geowave gs rmcs " + rStore + "-raster");
+		cmd.send("geowave gs rmstyle styleName_sub");
+		cmd.send("geowave gs rmstyle styleName_kde");
+		cmd.send("geowave gs rmds " + vStore + "-vector");
+		cmd.send("geowave gs rmds " + rCopiedStore + "-vector");
+		cmd.send("geowave gs rmcs " + vStoreKDE + "-raster");
+		cmd.send("geowave gs rmcs " + rStore + "-raster");
 	}
 
 	@Test
 	public void version() {
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave --version"), "version"));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave --version"), "version"));
 	}
 
 	@Test
 	public void usage() {
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave"), "usage"));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave"), "usage"));
 	}
 
 	@Test
 	public void help() {
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave help raster"), "usage: geowave raster"));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave help raster"), "usage: geowave raster"));
 	}
 
 	@Test
 	public void vector_happyPath() {
 		
 		// Create store/index
-		TestUtils.assertSuccess(CmdUtils.send(addStore));
-		TestUtils.assertSuccess(CmdUtils.send(addIndex));
-		TestUtils.assertSuccess(CmdUtils.send(addStore_KDE));
+		TestUtils.assertSuccess(cmd.send(addStore));
+		TestUtils.assertSuccess(cmd.send(addIndex));
+		TestUtils.assertSuccess(cmd.send(addStore_KDE));
 		
 		// Verify
-		String configList = CmdUtils.send("geowave config list");
-		assertEquals(vSpace, CmdUtils.getProperty(configList, String.format("store.%s.opts.gwNamespace", vStore)));
-		assertEquals(vSpaceKDE, CmdUtils.getProperty(configList, String.format("store.%s.opts.gwNamespace", vStoreKDE)));
-		assertEquals("32", CmdUtils.getProperty(configList, String.format("index.%s.opts.numPartitions", vIndex)));
-		assertEquals("spatial", CmdUtils.getProperty(configList, String.format("index.%s.type", vIndex)));
+		String configList = cmd.send("geowave config list");
+		assertEquals(vSpace, cmd.getProperty(configList, String.format("store.%s.opts.gwNamespace", vStore)));
+		assertEquals(vSpaceKDE, cmd.getProperty(configList, String.format("store.%s.opts.gwNamespace", vStoreKDE)));
+		assertEquals("32", cmd.getProperty(configList, String.format("index.%s.opts.numPartitions", vIndex)));
+		assertEquals("spatial", cmd.getProperty(configList, String.format("index.%s.type", vIndex)));
 		
 		// Ingest
-		TestUtils.assertSuccess(CmdUtils.send(ingestGermany));
+		TestUtils.assertSuccess(cmd.send(ingestGermany));
 		
 		// Verify
-		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + vStore)); // Should not have exception if ingest was successful.
+		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + vStore)); // Should not have exception if ingest was successful.
 
 		// Start Geoserver
-		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8000", hostname)));
-		TestUtils.assertSuccess(CmdUtils.send("sudo service geowave restart"));
+		TestUtils.assertSuccess(cmd.send(String.format("geowave config geoserver %s:8000", hostname)));
+		TestUtils.assertSuccess(cmd.send("sudo service geowave restart"));
 		assertTrue(TestUtils.tryUntilOK(String.format("http://%s:8000/geoserver/web/", hostname), 240));
 		
 		// Run a Kernel Density Estimation
-		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, runKDE));
+		TestUtils.assertSuccess(cmd.send(runKDE));
 		
 		// Verify
-		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + vStore)); // Should not have exception if KDE was successful.
+		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + vStore)); // Should not have exception if KDE was successful.
 		
 		// Add Vector Layer
-		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + vStore));
+		TestUtils.assertSuccess(cmd.send("geowave gs addlayer " + vStore));
 		
 		// Verify
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), vCoverage));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), vStore + "-vector"));	
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listfl"), vCoverage));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listds"), vStore + "-vector"));	
 		
 		// Add KDE Layer
-		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + vStoreKDE));
+		TestUtils.assertSuccess(cmd.send("geowave gs addlayer " + vStoreKDE));
 		
 		// Verify
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), vCoverageKDE));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), vStoreKDE + "-raster"));	
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listfl"), vCoverageKDE));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listcs"), vStoreKDE + "-raster"));	
 		
-		TestUtils.assertSuccess(CmdUtils.send("geowave gs addstyle styleName_kde -sld /mnt/KDEColorMap.sld"));
-		TestUtils.assertSuccess(CmdUtils.send("geowave gs addstyle styleName_sub -sld /mnt/SubsamplePoints.sld"));
+		TestUtils.assertSuccess(cmd.send("geowave gs addstyle styleName_kde -sld /mnt/KDEColorMap.sld"));
+		TestUtils.assertSuccess(cmd.send("geowave gs addstyle styleName_sub -sld /mnt/SubsamplePoints.sld"));
 		
 		// Verify
-		String styles = CmdUtils.send("geowave gs liststyles");
+		String styles = cmd.send("geowave gs liststyles");
 		assertTrue(TestUtils.insensitiveMatch(styles, "styleName_kde"));
 		assertTrue(TestUtils.insensitiveMatch(styles, "styleName_sub"));
 		
 		// Set Default Styles
-		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave gs setls %s --styleName styleName_kde", vCoverageKDE)));
-		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave gs setls %s --styleName styleName_sub", vCoverage)));
+		TestUtils.assertSuccess(cmd.send(String.format("geowave gs setls %s --styleName styleName_kde", vCoverageKDE)));
+		TestUtils.assertSuccess(cmd.send(String.format("geowave gs setls %s --styleName styleName_sub", vCoverage)));
 
 		// Verify
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverage), "styleName_sub"));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs getfl " + vCoverageKDE), "styleName_kde"));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs getfl " + vCoverage), "styleName_sub"));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs getfl " + vCoverageKDE), "styleName_kde"));
 	}
 	
 	@Test
 	public void raster_happyPath() {
 		// Add stores and index
-		TestUtils.assertSuccess(CmdUtils.send(addStore_raster));
-		TestUtils.assertSuccess(CmdUtils.send(copyStore_raster));
-		TestUtils.assertSuccess(CmdUtils.send(addIndex_raster));
+		TestUtils.assertSuccess(cmd.send(addStore_raster));
+		TestUtils.assertSuccess(cmd.send(copyStore_raster));
+		TestUtils.assertSuccess(cmd.send(addIndex_raster));
 		
 		// Verify
-		String configList = CmdUtils.send("geowave config list");
-		assertEquals(rSpace, CmdUtils.getProperty(configList, String.format("store.%s.opts.gwNamespace", rStore)));
-		assertEquals(rSpaceCopy, CmdUtils.getProperty(configList, String.format("store.%s.opts.gwNamespace", rCopiedStore)));
-		assertEquals("spatial", CmdUtils.getProperty(configList, String.format("index.%s.type", rIndex)));
+		String configList = cmd.send("geowave config list");
+		assertEquals(rSpace, cmd.getProperty(configList, String.format("store.%s.opts.gwNamespace", rStore)));
+		assertEquals(rSpaceCopy, cmd.getProperty(configList, String.format("store.%s.opts.gwNamespace", rCopiedStore)));
+		assertEquals("spatial", cmd.getProperty(configList, String.format("index.%s.type", rIndex)));
 		
 		// Analyze Data
-		TestUtils.assertSuccess(CmdUtils.send(cacheGermany));
-		TestUtils.assertSuccess(CmdUtils.send(cacheBerlin));
+		TestUtils.assertSuccess(cmd.send(cacheGermany));
+		TestUtils.assertSuccess(cmd.send(cacheBerlin));
 		
 		// Ingest Data
-		TestUtils.assertSuccess(CmdUtils.send(ld_library_path, ingestBerlin));
+		TestUtils.assertSuccess(cmd.send(ingestBerlin));
 		
 		// Verify
-		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + rStore));
-		TestUtils.assertSuccess(CmdUtils.send("geowave remote liststats " + rCopiedStore)); // Should not have exception if ingest was successful.
+		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + rStore));
+		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + rCopiedStore)); // Should not have exception if ingest was successful.
 		
 		// Start Geoserver
-		TestUtils.assertSuccess(CmdUtils.send(String.format("geowave config geoserver %s:8000", hostname)));
-		TestUtils.assertSuccess(CmdUtils.send("sudo service geowave restart"));
+		TestUtils.assertSuccess(cmd.send(String.format("geowave config geoserver %s:8000", hostname)));
+		TestUtils.assertSuccess(cmd.send("sudo service geowave restart"));
 		assertTrue(TestUtils.tryUntilOK(String.format("http://%s:8000/geoserver/web/", hostname), 240));
 		
 		// Add First Layer
-		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer " + rStore));
+		TestUtils.assertSuccess(cmd.send("geowave gs addlayer " + rStore));
 		
 		// Verify
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), rCoverage));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), rStore + "-raster"));	
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listfl"), rCoverage));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listcs"), rStore + "-raster"));	
 		
 		// Add Copied Layer
-		TestUtils.assertSuccess(CmdUtils.send(hadoop_home, "geowave gs addlayer --add ALL " + rCopiedStore));
+		TestUtils.assertSuccess(cmd.send("geowave gs addlayer --add ALL " + rCopiedStore));
 		
 		// Verify
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "band"));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "scene"));
-		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), rCopiedStore + "-vector"));	
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listfl"), "band"));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listfl"), "scene"));
+		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listds"), rCopiedStore + "-vector"));	
 	}
 }

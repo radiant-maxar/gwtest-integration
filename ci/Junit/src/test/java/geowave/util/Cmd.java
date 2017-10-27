@@ -13,15 +13,24 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.*;
 
 
-public class CmdUtils {
+public class Cmd {
+	
+	private String[] vars;
+	
+	// When initializing the Cmd object, select the environment variables to use.
+	public Cmd() {
+		resetVars();
+	}
+	public Cmd(String[] vars, boolean includeEnv) {
+		setVars(vars, includeEnv);
+	}
 	
 	// Send a command, and get the response back.
 	// TODO: Timeout
-	public static String send(int timeout, String[] cmd, String... vars) {
-		String[] all_vars = (String[]) ArrayUtils.addAll(vars, environment());
+	public String send(String... cmd) {
 		Process p;
 		try {
-			p = createCmdProcess(cmd, all_vars);
+			p = createCmdProcess(cmd, vars);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -36,20 +45,8 @@ public class CmdUtils {
 			return null;
 		}
 	}
-	public static String send(String... cmd) {
-		// Default wait 1 minute.
-		return send(60000, cmd);
-	}
-	public static String send(int timeout, String... cmd) {
-		// Default wait 1 minute.
-		return send(timeout, cmd, new String[]{});
-	}
-	public static String send(String[] vars, String... cmd) {
-		// Default wait 1 minute.
-		return send(60000, cmd, vars);
-	}
 	
-	public static String shellCmd(String cmd) {
+	public String shellCmd(String cmd) {
 		String responses = "";
 		responses += send("echo '" + cmd + "' > temp.sh");
 		responses += send("/bin/sh temp.sh");
@@ -57,7 +54,7 @@ public class CmdUtils {
 		return responses;
 	}
 	
-	public static String getProperty(String response, String propertyRegEx) {
+	public String getProperty(String response, String propertyRegEx) {
 		// Get string after property name + colon
 		propertyRegEx += ".*:";
 		String[] matches = response.split(propertyRegEx);
@@ -74,19 +71,19 @@ public class CmdUtils {
 		return match.split("\n")[0].trim();
 	}
 	
-	public static String getJSONProperty(String json, String property) {
+	public String getJSONProperty(String json, String property) {
 		System.out.println("R: " + json);
 		JSONObject j = new JSONObject(json);
 		return (String) j.get(property);
 	}
 	
-	public static boolean JSONcontains(String json, String property) {
+	public boolean JSONcontains(String json, String property) {
 		System.out.println("R: " + json);
 		JSONObject j = new JSONObject(json);
 		return j.has(property);
 	}
 	
-	private static Process createCmdProcess(String[] cmd, String[] vars) throws Exception {
+	private Process createCmdProcess(String[] cmd, String[] vars) throws Exception {
 		if (cmd.length == 1) {
 			return Runtime.getRuntime().exec(cmd[0], vars);
 		} else if (cmd.length > 1) {
@@ -107,4 +104,15 @@ public class CmdUtils {
 		return outputEnvironemnt;
 	}
 	
+	public void resetVars() {
+		this.vars = environment();
+	}
+	
+	public void setVars(String[] vars, boolean includeEnv) {
+		if (includeEnv) {
+			this.vars = (String[]) ArrayUtils.addAll(vars, environment());
+		} else {
+			this.vars = vars;
+		}
+	}
 }

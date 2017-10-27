@@ -73,13 +73,11 @@ public class Cmd {
 	}
 	
 	public String getJSONProperty(String json, String property) {
-		System.out.println("R: " + json);
 		JSONObject j = new JSONObject(json);
 		return (String) j.get(property);
 	}
 	
 	public boolean JSONcontains(String json, String property) {
-		System.out.println("R: " + json);
 		JSONObject j = new JSONObject(json);
 		return j.has(property);
 	}

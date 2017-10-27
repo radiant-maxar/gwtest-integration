@@ -12,7 +12,6 @@ public class TestUtils {
 	// To make tests cleaner.  See SO https://stackoverflow.com/questions/86780/
 	public static boolean insensitiveMatch(String fullString, String targetString) {
 		Pattern p = Pattern.compile(Pattern.quote(targetString), Pattern.CASE_INSENSITIVE);
-		System.out.println("OUTPUT 2 MATCH: " + fullString);
 		return p.matcher(fullString).find();
 	}
 	
@@ -24,9 +23,8 @@ public class TestUtils {
 			fail("Response should not contain exception");
 		} else if (insensitiveMatch(response, "error")){
 			System.out.println("R <ERROR>: " + response);
-//			fail("Response should not contain error");
+			// TODO: In the future, this should Fail.
 		} else {
-			System.out.println("R <SUCCESS>:" + response); // always print response, for debugging
 			// pass
 		}
 	}
@@ -39,11 +37,8 @@ public class TestUtils {
 			c.setRequestMethod("HEAD");
 			c.connect();
 			int code = c.getResponseCode();
-			System.out.println("CODE: " + code);
-			System.out.println("MSG: " + c.getResponseMessage());
 			return code;
 		} catch (IOException e) {
-			System.out.println("Error Message: " + e.getMessage());
 			return 0;
 		}
 	}

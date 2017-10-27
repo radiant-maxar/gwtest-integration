@@ -68,19 +68,9 @@ public class HelloTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		System.out.println(" - - - STARTING NEW TEST - - - ");
 		cmd = new Cmd();
 		TestUtils.assertSuccess(cmd.send("geowave --version"));
-		System.out.println("Using HOSTNAME = " + hostname);
-//		// Verify no data in GS:
-//		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listfl"), "{\"layers\": []}"));
-//		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listds"), "[]"));
-//		assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave gs listcs"), "[]"));
-//		
-//		// Verify there is no ingested data:
-//		for (String store : new String[]{vStoreKDE, vStore, rStore, rCopiedStore}) {
-//			assertTrue(TestUtils.insensitiveMatch(CmdUtils.send("geowave remote liststats " + store), "exception"));
-//		}
-//		
 	}
 
 	@After

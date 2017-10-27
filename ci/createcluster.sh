@@ -18,7 +18,7 @@ CLUSTER_ID=$(aws emr create-cluster \
 --name ${CLUSTER_NAME} \
 --ec2-attributes "KeyName=${KEYNAME},SubnetId=${SUBNET_ID},EmrManagedMasterSecurityGroup=${MASTER_SECURITY_GROUP},EmrManagedSlaveSecurityGroup=${SLAVE_SECURITY_GROUP}" \
 --release-label ${EMR_VERSION} \
---applications Name=Hadoop Name=HBase \
+--applications Name=Hadoop Name=HBase Name=Spark \
 --use-default-roles \
 --no-auto-terminate \
 --log-uri s3://temp-logs-james \

@@ -94,7 +94,7 @@ public class Cmd {
 	}
 	
 	private static String[] environment() {
-		Map<String, String> env = System.getenv(); // This didn't work.
+		Map<String, String> env = System.getenv();
 		String[] outputEnvironemnt = new String[env.size()];
 		int i=0;
 		for (String envName : env.keySet()) {

@@ -12,6 +12,7 @@ public class TestUtils {
 	// To make tests cleaner.  See SO https://stackoverflow.com/questions/86780/
 	public static boolean insensitiveMatch(String fullString, String targetString) {
 		Pattern p = Pattern.compile(Pattern.quote(targetString), Pattern.CASE_INSENSITIVE);
+		System.out.println("OUTPUT 2 MATCH: " + fullString);
 		return p.matcher(fullString).find();
 	}
 	

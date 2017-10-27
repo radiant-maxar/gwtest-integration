@@ -37,8 +37,9 @@ public class Cmd {
 		}
 		System.out.println("C: " + Arrays.toString(cmd));
 		InputStream is = p.getInputStream();
+		InputStream es = p.getErrorStream();
 		try {
-			String output = IOUtils.toString(is, "UTF-8");
+			String output = IOUtils.toString(es, "UTF-8") + IOUtils.toString(is, "UTF-8");
 			return output;
 		} catch (IOException e) {
 			e.printStackTrace();

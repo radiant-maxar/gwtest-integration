@@ -69,7 +69,7 @@ public class HelloTest {
 	@Before
 	public void setUp() throws Exception {
 		System.out.println(" - - - STARTING NEW TEST - - - ");
-		cmd = new Cmd();
+		cmd = new Cmd(ld_library_path, true);
 		TestUtils.assertSuccess(cmd.send("geowave --version"));
 	}
 

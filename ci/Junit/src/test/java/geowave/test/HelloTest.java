@@ -22,9 +22,6 @@ public class HelloTest {
 		} catch (Exception e) {
 			hostname = "localhost";
 		}
-		if (hostname.contains("sandbox")) {
-			hostname = "localhost";  // When running on VirtualBox
-		}
 	}
 	
 	Scanner s;
@@ -135,7 +132,7 @@ public class HelloTest {
 		// Start Geoserver
 		TestUtils.assertSuccess(cmd.send(String.format("geowave config geoserver %s:8993", hostname)));
 		TestUtils.assertSuccess(cmd.send("sudo service geowave restart"));
-		assertTrue(TestUtils.tryUntilOK(String.format("http://%s:8993/geoserver/web/", hostname), 240));
+		assertTrue(TestUtils.tryUntilOK("http://localhost:8993/geoserver/web/", 240));
 		
 		// Run a Kernel Density Estimation
 		TestUtils.assertSuccess(cmd.send(runKDE));
@@ -199,10 +196,10 @@ public class HelloTest {
 		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + rCopiedStore)); // Should not have exception if ingest was successful.
 		
 		// Start Geoserver
-		TestUtils.assertSuccess(cmd.send(String.format("geowave config geoserver %s:8000", hostname)));
+		TestUtils.assertSuccess(cmd.send(String.format("geowave config geoserver %s:8993", hostname)));
 		TestUtils.assertSuccess(cmd.send("sudo service geowave restart"));
-		assertTrue(TestUtils.tryUntilOK(String.format("http://%s:8000/geoserver/web/", hostname), 240));
-		
+		assertTrue(TestUtils.tryUntilOK("http://localhost:8993/geoserver/web/", 240));
+				
 		// Add First Layer
 		TestUtils.assertSuccess(cmd.send("geowave gs addlayer " + rStore));
 		

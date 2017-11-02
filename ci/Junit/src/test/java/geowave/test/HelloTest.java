@@ -22,6 +22,9 @@ public class HelloTest {
 		} catch (Exception e) {
 			hostname = "localhost";
 		}
+		if (hostname.contains("sandbox")) {
+			hostname = "localhost";  // When running on VirtualBox
+		}
 	}
 	
 	Scanner s;
@@ -63,13 +66,13 @@ public class HelloTest {
 	
 	// Environment Variables
 	private String[] hadoop_home = {"HADOOP_HOME=/usr/hdp/2.6.0.3-8/hadoop/"};
-	private String[] ld_library_path = {"LD_LIBRARY_PATH=/mnt"};
+	private String[] environemntVariables = {"LD_LIBRARY_PATH=/mnt", "HADOOP_HOME=/usr/hdp/2.6.0.3-8/hadoop/"};
 	//TODO - Remove comment from @Before.
 	
 	@Before
 	public void setUp() throws Exception {
 		System.out.println(" - - - STARTING NEW TEST - - - ");
-		cmd = new Cmd(ld_library_path, true);
+		cmd = new Cmd(environemntVariables, true);
 		TestUtils.assertSuccess(cmd.send("geowave --version"));
 	}
 

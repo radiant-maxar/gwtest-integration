@@ -62,8 +62,7 @@ public class HelloTest {
 	private String[] ingestBerlin = {"geowave", "landsat", "ingest", "--nbestperspatial", "--nbestscenes", "1", "--usecachedscenes", "--cql", berlin + " AND band='B8' AND cloudCover>0", "--crop", "--retainimages", "-ws", "/mnt/landsat", "--vectorstore", rCopiedStore, "--pyramid", "--coverage", rCoverage, rStore, rIndex};
 	
 	// Environment Variables
-	private String[] hadoop_home = {"HADOOP_HOME=/usr/hdp/2.6.0.3-8/hadoop/"};
-	private String[] environemntVariables = {"LD_LIBRARY_PATH=/mnt", "HADOOP_HOME=/usr/hdp/2.6.0.3-8/hadoop/"};
+	private String[] environemntVariables = {"LD_LIBRARY_PATH=/mnt", "HADOOP_HOME=/usr/hdp/2.6.1.0-129/hadoop/"};
 	//TODO - Remove comment from @Before.
 	
 	@Before

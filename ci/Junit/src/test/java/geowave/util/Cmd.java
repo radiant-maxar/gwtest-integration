@@ -40,6 +40,7 @@ public class Cmd {
 		InputStream es = p.getErrorStream();
 		try {
 			String output = IOUtils.toString(es, "UTF-8") + IOUtils.toString(is, "UTF-8");
+			System.out.println("R: " + output);
 			return output;
 		} catch (IOException e) {
 			e.printStackTrace();

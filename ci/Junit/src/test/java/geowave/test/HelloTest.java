@@ -141,7 +141,7 @@ public class HelloTest {
 		TestUtils.assertSuccess(cmd.send(runKDE));
 		
 		// Verify
-		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + vStore)); // Should not have exception if KDE was successful.
+		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + vStoreKDE)); // Should not have exception if KDE was successful.
 		
 		// Add Vector Layer
 		TestUtils.assertSuccess(cmd.send("geowave gs addlayer " + vStore));

@@ -41,8 +41,8 @@ public class HelloTest {
 	private String rCopiedStore = "landsatvector";
 	private String rIndex = "spatial";
 	private String rCoverage = "berlin_mosaic";
-	private String rSpace = "landsat_raster";
-	private String rSpaceCopy = "landsat_vector";
+	private String rSpace = "geowave.landsat_raster";
+	private String rSpaceCopy = "geowave.landsat_vector";
 	
 	private String storeType = "accumulo --user geowave --password geowave --instance accumulo";
 //	private String storeType = "hbase";

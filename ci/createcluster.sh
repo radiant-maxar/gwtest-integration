@@ -6,7 +6,7 @@ KEYNAME="geowave-benchmark"
 SUBNET_ID="subnet-0db4897b"
 MASTER_SECURITY_GROUP="sg-edc8f490"
 SLAVE_SECURITY_GROUP="sg-e9c8f494"
-EMR_VERSION="emr-5.6.0"
+EMR_VERSION="emr-5.7.0"
 TAGNAME=""
 REGION="us-east-1"
 VERSION="latest"
@@ -23,9 +23,10 @@ CLUSTER_ID=$(aws emr create-cluster \
 --name ${CLUSTER_NAME} \
 --ec2-attributes "KeyName=${KEYNAME},SubnetId=${SUBNET_ID},EmrManagedMasterSecurityGroup=${MASTER_SECURITY_GROUP},EmrManagedSlaveSecurityGroup=${SLAVE_SECURITY_GROUP}" \
 --release-label ${EMR_VERSION} \
---applications Name=Hadoop Name=HBase Name=Spark \
+--applications Name=Hadoop Name=HBase Name=Pig Name=Hue Name=Hive \
 --use-default-roles \
 --no-auto-terminate \
+--tags Project="Geowave" User="James-Auto" Duration="About 20 minutes; Delete if > 1 HR" \
 --log-uri s3://temp-logs-james \
 --instance-fleets InstanceFleetType=MASTER,TargetOnDemandCapacity=1,InstanceTypeConfigs=['{InstanceType=m4.xlarge}'] \
 InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=SWITCH_TO_ON_DEMAND}'} \

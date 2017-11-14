@@ -2,16 +2,21 @@
 
 # Get variables
 NUM_WORKERS=4
-KEYNAME="testkey"
-MAC=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/)
-SUBNET_ID=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/subnet-id)
-MASTER_SECURITY_GROUP=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/security-group-ids)
-SLAVE_SECURITY_GROUP=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC/security-group-ids)
+KEYNAME="geowave-benchmark"
+SUBNET_ID="subnet-0db4897b"
+MASTER_SECURITY_GROUP="sg-edc8f490"
+SLAVE_SECURITY_GROUP="sg-e9c8f494"
 EMR_VERSION="emr-5.6.0"
 TAGNAME=""
 REGION="us-east-1"
 VERSION="latest"
 CLUSTER_NAME="temp-gw-test-cluster-pipeline"
+
+AWS_CREDS=$(aws sts assume-role --role-arn 'arn:aws:iam::539674021708:role/geowave-jenkins-EMR-crossAccountSignIn' --role-session-name 'geowave-qa-launch-emr')
+
+export AWS_ACCESS_KEY_ID==$(echo AWS_CREDS | jq .Credentials.AccessKeyId)
+export AWS_SECRET_ACCESS_KEY=$(echo AWS_CREDS | jq .Credentials.SecretAccessKey)
+export AWS_SESSION_TOKEN=$(echo AWS_CREDS | jq .Credentials.SessionToken)
 
 # Create cluster
 CLUSTER_ID=$(aws emr create-cluster \

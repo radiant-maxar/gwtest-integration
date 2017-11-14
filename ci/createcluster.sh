@@ -14,7 +14,7 @@ CLUSTER_NAME="temp-gw-test-cluster-pipeline"
 
 AWS_CREDS=$(aws sts assume-role --role-arn 'arn:aws:iam::539674021708:role/geowave-jenkins-EMR-crossAccountSignIn' --role-session-name 'geowave-qa-launch-emr')
 
-export AWS_ACCESS_KEY_ID==$(echo ${AWS_CREDS} | jq .Credentials.AccessKeyId | tr -d '"')
+export AWS_ACCESS_KEY_ID=$(echo ${AWS_CREDS} | jq .Credentials.AccessKeyId | tr -d '"')
 export AWS_SECRET_ACCESS_KEY=$(echo ${AWS_CREDS} | jq .Credentials.SecretAccessKey | tr -d '"')
 export AWS_SESSION_TOKEN=$(echo ${AWS_CREDS} | jq .Credentials.SessionToken | tr -d '"')
 

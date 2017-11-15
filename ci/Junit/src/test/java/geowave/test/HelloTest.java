@@ -66,7 +66,6 @@ public class HelloTest {
 	
 	// Environment Variables
 	private String[] environemntVariables = {"LD_LIBRARY_PATH=/mnt", "HADOOP_HOME=/usr/hdp/2.6.1.0-129/hadoop/"};
-	//TODO - Remove comment from @Before.
 	
 	@Before
 	public void setUp() throws Exception {
@@ -134,6 +133,9 @@ public class HelloTest {
 		// Start Geoserver
 		// PORT 8000 for EMR, 8993 for SandBox
 		TestUtils.assertSuccess(cmd.send(String.format("geowave config geoserver %s:8000", hostname)));
+		
+		// capture any env vars that may have been created during test.
+		cmd.setVars(environemntVariables, true);
 		
 		// Run a Kernel Density Estimation
 		TestUtils.assertSuccess(cmd.send(runKDE));

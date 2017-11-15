@@ -1,11 +1,11 @@
 #!/bin/bash -xe
 
 # Get variables
-NUM_WORKERS=2
-KEYNAME="geowave-benchmark"
+NUM_WORKERS=4
+KEYNAME="geowave-qa-geointsvc"
 SUBNET_ID="subnet-0db4897b"
-MASTER_SECURITY_GROUP="sg-fb8a788e"
-SLAVE_SECURITY_GROUP="sg-fb8a788e"
+MASTER_SECURITY_GROUP="sg-edc8f490"
+SLAVE_SECURITY_GROUP="sg-e9c8f494"
 EMR_VERSION="emr-5.7.0"
 TAGNAME=""
 REGION="us-east-1"

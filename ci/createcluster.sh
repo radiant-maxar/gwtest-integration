@@ -2,7 +2,7 @@
 
 # Get variables
 NUM_WORKERS=4
-KEYNAME="geowave-qa-geointsvc"
+KEYNAME="geowave-benchmark"
 SUBNET_ID="subnet-0db4897b"
 MASTER_SECURITY_GROUP="sg-edc8f490"
 SLAVE_SECURITY_GROUP="sg-e9c8f494"

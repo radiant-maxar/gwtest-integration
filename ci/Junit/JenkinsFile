@@ -3,16 +3,33 @@
 pipeline {
 	agent any
 	stages {
-		stage('Create EMR') {
+		stage('HBase Tests') {
 			steps{
 				sh '''
+				export db_type="hbase"
 				source ci/createcluster.sh
 				code=0
 				{
-					echo "first block"
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
-					echo "after startup.sh"
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests.sh
+					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh
+				} || {
+					echo "there was a failure"
+					code=1 
+				}
+				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+				exit $code
+				'''
+			}
+		}
+		stage('Accumulo Tests') {
+			steps{
+				sh '''
+				export db_type="accumulo"
+				source ci/createcluster.sh
+				code=0
+				{
+					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
+					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh
 				} || {
 					echo "there was a failure"
 					code=1 

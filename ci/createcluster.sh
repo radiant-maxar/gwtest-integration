@@ -18,19 +18,25 @@ export AWS_ACCESS_KEY_ID=$(echo ${AWS_CREDS} | jq .Credentials.AccessKeyId | tr 
 export AWS_SECRET_ACCESS_KEY=$(echo ${AWS_CREDS} | jq .Credentials.SecretAccessKey | tr -d '"')
 export AWS_SESSION_TOKEN=$(echo ${AWS_CREDS} | jq .Credentials.SessionToken | tr -d '"')
 
+if [${db_type} = "hbase"]; then
+	hbaseApp="Name=HBase"
+else
+	hbaseApp=""
+fi
+
 # Create cluster
 CLUSTER_ID=$(aws emr create-cluster \
 --name ${CLUSTER_NAME} \
 --ec2-attributes "KeyName=${KEYNAME},SubnetId=${SUBNET_ID},EmrManagedMasterSecurityGroup=${MASTER_SECURITY_GROUP},EmrManagedSlaveSecurityGroup=${SLAVE_SECURITY_GROUP}" \
 --release-label ${EMR_VERSION} \
---applications Name=Hadoop Name=HBase Name=Pig Name=Hue Name=Hive \
+--applications Name=Hadoop ${hbaseApp} Name=Pig Name=Hue Name=Hive \
 --use-default-roles \
 --no-auto-terminate \
 --tags Project="Geowave" User="James-Auto" DeleteWhen="Running for more than 1 HR" \
 --log-uri s3://temp-logs-james \
 --instance-fleets InstanceFleetType=MASTER,TargetOnDemandCapacity=1,InstanceTypeConfigs=['{InstanceType=m4.xlarge}'] \
 InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=SWITCH_TO_ON_DEMAND}'} \
---bootstrap-action Path=s3://geowave/latest/scripts/emr/hbase/bootstrap-geowave.sh \
+--bootstrap-action Path=s3://geowave/latest/scripts/emr/${db_type}/bootstrap-geowave.sh \
 --region ${REGION} | jq .ClusterId | tr -d '"')
 
 # Wait until cluster has been created

@@ -12,7 +12,7 @@ export PATH=$M2:$PATH
 source /mnt/geowave-env.sh
 
 # Determine HBase vs. Accumulo
-export db_type="accumulo"
+export db_type="hbase"
 
 # Run tests
 cd gwtest-integration/ci/Junit

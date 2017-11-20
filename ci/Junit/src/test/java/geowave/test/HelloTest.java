@@ -147,8 +147,9 @@ public class HelloTest {
 		cmd.setVars(environemntVariables, true);
 		
 		// Run a Kernel Density Estimation
-//		cmd.send(runKDE); Temporarily disabling, to ensure failure later
+		cmd.send(runKDE);
 		// Not asserting success, because there are currently (sometimes) exceptions in a successful KDE with Accumulo.
+		// Verified by skipping this step; failure occured on the "geowave remote liststats ..." command.
 		
 		// Verify
 		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + vStoreKDE)); // Should not have exception if KDE was successful.

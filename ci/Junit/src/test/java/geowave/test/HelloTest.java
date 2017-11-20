@@ -147,7 +147,7 @@ public class HelloTest {
 		cmd.setVars(environemntVariables, true);
 		
 		// Run a Kernel Density Estimation
-		cmd.send(runKDE); 
+//		cmd.send(runKDE); Temporarily disabling, to ensure failure later
 		// Not asserting success, because there are currently (sometimes) exceptions in a successful KDE with Accumulo.
 		
 		// Verify

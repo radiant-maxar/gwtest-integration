@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 # Get variables
-NUM_WORKERS=4
+NUM_WORKERS=2
 KEYNAME="geowave-benchmark"
 SUBNET_ID="subnet-0db4897b"
 MASTER_SECURITY_GROUP="sg-edc8f490"
@@ -34,8 +34,8 @@ CLUSTER_ID=$(aws emr create-cluster \
 --no-auto-terminate \
 --tags Project="Geowave" User="James-Auto" DeleteWhen="Running for more than 1 HR" \
 --log-uri s3://temp-logs-james \
---instance-fleets InstanceFleetType=MASTER,TargetOnDemandCapacity=1,InstanceTypeConfigs=['{InstanceType=m4.xlarge}'] \
-InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=SWITCH_TO_ON_DEMAND}'} \
+--instance-fleets InstanceFleetType=MASTER,TargetSpotCapacity=1,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=TERMINATE_CLUSTER}'} \
+InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=TERMINATE_CLUSTER}'} \
 --bootstrap-action Path=s3://geowave/latest/scripts/emr/${db_type}/bootstrap-geowave.sh \
 --region ${REGION} | jq .ClusterId | tr -d '"')
 

@@ -1,0 +1,1229 @@
+{
+	"info": {
+		"name": "Geowave_Happypath",
+		"_postman_id": "ba307afc-ee00-1aad-5453-df540fadf5ef",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Startup",
+			"description": "",
+			"item": [
+				{
+					"name": "Hello Geowave!",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
+									"var parseJSON = eval(postman.getEnvironmentVariable('parseJSON'));",
+									"",
+									"data = parseJSON(tests, responseBody);",
+									"",
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
+									"",
+									"testLevels(tests, data, \"swagger\")",
+									"",
+									"postman.setEnvironmentVariable('base', postman.getEnvironmentVariable('domain') + \":\" + postman.getEnvironmentVariable('port') + \"/\" + postman.getEnvironmentVariable('version'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{domain}}:{{port}}/restservices/api",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"restservices",
+								"api"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Config Geoserver",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "GeoServer_URL",
+									"value": "{{hostname}}:8000",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/config/geoserver",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"config",
+								"geoserver"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Config List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
+									"",
+									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
+									"var parseJSON = eval(postman.getEnvironmentVariable('parseJSON'));",
+									"",
+									"data = parseJSON(tests, responseBody);",
+									"",
+									"if (testLevels(tests, data, ['geoserver.url'])) {",
+									"    tests[\"Geoserver set to hostname\"] = data['geoserver.url'] == postman.getEnvironmentVariable('hostname') + \":8000\";",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{base}}/config/list",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"config",
+								"list"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Geowave Creation",
+			"description": "",
+			"item": [
+				{
+					"name": "add gdelt store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "gdelt",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "zookeeper",
+									"value": "{{hostname}}:2181",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "geowaveNamespace",
+									"value": "geowave.gdelt",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "instance",
+									"value": "{{instance}}",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user",
+									"value": "geowave",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "password",
+									"value": "geowave",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/config/addstore/accumulo",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"config",
+								"addstore",
+								"accumulo"
+							]
+						},
+						"description": "good"
+					},
+					"response": []
+				},
+				{
+					"name": "add gdelt-kde store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "gdelt-kde",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "zookeeper",
+									"value": "{{hostname}}:2181",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "geowaveNamespace",
+									"value": "geowave.gdelt",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "instance",
+									"value": "{{instance}}",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "user",
+									"value": "geowave",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "geowave",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/config/addstore/accumulo",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"config",
+								"addstore",
+								"accumulo"
+							]
+						},
+						"description": "good"
+					},
+					"response": []
+				},
+				{
+					"name": "add spatial index",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "gdelt-spatial",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "partitionStrategy",
+									"value": "ROUND_ROBIN",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "numPartitions",
+									"value": "32",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/config/addindex/spatial",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"config",
+								"addindex",
+								"spatial"
+							]
+						},
+						"description": "good"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ingest",
+			"description": "",
+			"item": [
+				{
+					"name": "ingest localtogw",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be Success\"] = responseCode.code >= 200 && responseCode.code < 300; // change to looking for just 200 once fixed."
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "file_or_directory",
+									"value": "/mnt/gdelt",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "storename",
+									"value": "gdelt",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "index_group_list",
+									"value": "gdelt-spatial",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/ingest/localToGW",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"ingest",
+								"localToGW"
+							]
+						},
+						"description": "error with parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "remote liststats",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "parameters",
+									"value": "gdelt",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/remote/liststats?store_name=gdelt",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"remote",
+								"liststats"
+							],
+							"query": [
+								{
+									"key": "store_name",
+									"value": "gdelt",
+									"equals": true
+								}
+							]
+						},
+						"description": "this is taking a long time (or freezing?)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Geoserver",
+			"description": "",
+			"item": [
+				{
+					"name": "Add Layer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "GeoWave_store_name",
+									"value": "gdelt",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/gs/addlayer",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"addlayer"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add KDE Layer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "GeoWave_store_name",
+									"value": "gdelt-kde",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/gs/addlayer",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"addlayer"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List Feature Layers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{base}}/gs/listfl",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"listfl"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List Coverage Stores",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{base}}/gs/listcs",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"listcs"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add Style Subsample",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stylesld",
+									"value": "/mnt/SubsamplePoints.sld",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "GeoWave_style_name",
+									"value": "styleName_sub",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/gs/addstyle",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"addstyle"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add Style KDE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
+									"tests[\"Status Code should not be 500\"] = responseCode.code != 500;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stylesld",
+									"value": "/mnt/KDEColorMap.sld",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "GeoWave_style_name",
+									"value": "styleName_kde",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/gs/addstyle",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"addstyle"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List Styles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{base}}/gs/liststyles",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"liststyles"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Set LS Subsample",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "styleName",
+									"value": "styleName_kde",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "layer_name",
+									"value": "gdeltevent",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/gs/setls",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"setls"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Set LS KDE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "styleName",
+									"value": "styleName_kde",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "layer_name",
+									"value": "gdeltevent",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/gs/setls",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"setls"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Feature Layer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "parameters",
+									"value": "gdeltevent_kde",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/gs/getfl?layer_name=gdeltevent",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"getfl"
+							],
+							"query": [
+								{
+									"key": "layer_name",
+									"value": "gdeltevent",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clean up",
+			"description": "",
+			"item": [
+				{
+					"name": "Clear Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be Success\"] = responseCode.code >= 200 && responseCode.code < 300; // change to looking for just 200 once fixed."
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "store_name",
+									"value": "gdelt",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/remote/clear",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"remote",
+								"clear"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be Success\"] = responseCode.code >= 200 && responseCode.code < 300; // change to looking for just 200 once fixed."
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "gdelt",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/config/rmstore",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"config",
+								"rmstore"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Clear KDE Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be Success\"] = responseCode.code >= 200 && responseCode.code < 300; // change to looking for just 200 once fixed."
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "store_name",
+									"value": "gdelt_kde",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/remote/clear",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"remote",
+								"clear"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Remove KDE Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be Success\"] = responseCode.code >= 200 && responseCode.code < 300; // change to looking for just 200 once fixed."
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "gdelt-kde",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/config/rmstore",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"config",
+								"rmstore"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Index",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be Success\"] = responseCode.code >= 200 && responseCode.code < 300; // change to looking for just 200 once fixed."
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "gdelt-spatial",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/config/rmindex",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"config",
+								"rmindex"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Feature Layer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be Success\"] = responseCode.code >= 200 && responseCode.code < 300; // change to looking for just 200 once fixed."
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "layer_name",
+									"value": "gdeltevent",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/gs/rmfl",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"gs",
+								"rmfl"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

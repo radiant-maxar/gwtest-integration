@@ -13,7 +13,7 @@ pipeline {
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh
 					npm install newman --global
-					newman run Postman/collections/Geowave_Happypath.postman_collection.json \
+					./node_modules/newman/bin/newman run Postman/collections/Geowave_Happypath.postman_collection.json \
 						-e Postman/environments/gw_hbase.postman_environment.json \
 						--timeout-request 300000 \
 						--global-var "domain=${DOMAIN}"
@@ -36,7 +36,7 @@ pipeline {
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh
 					npm install newman --global
-					newman run Postman/collections/Geowave_Happypath.postman_collection.json \
+					./node_modules/newman/bin/newman run Postman/collections/Geowave_Happypath.postman_collection.json \
 						-e Postman/environments/gw_hbase.postman_environment.json \
 						--timeout-request 300000 \
 						--global-var "domain=${DOMAIN}"

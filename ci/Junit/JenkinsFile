@@ -4,7 +4,7 @@ pipeline {
 	agent any
 	stages {
 		stage('HBase Tests') {
-			try {
+			steps {
 				sh '''
 					export db_type="hbase"
 					source ci/createcluster.sh
@@ -26,31 +26,38 @@ pipeline {
 					exit $code
 				'''
 			}
-			catch (e) {
-				slackSend color: 'bad', message: ':fire: The hbase acceptance tests have failed :fire:'
+			post {
+				failure {
+					slackSend color: 'bad', message: ':fire: The hbase acceptance tests have failed :fire:'
+				}
 			}
 		}
 		stage('Accumulo Tests') {
 			steps{
 				sh '''
-				export db_type="accumulo"
-				source ci/createcluster.sh
-				code=0
-				{
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh
-					npm install newman --global
-					PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
-						-e ci/Postman/environments/gw_hbase.postman_environment.json \
-						--timeout-request 10000 \
-						--global-var "domain=${DOMAIN}"
-				} || {
-					echo "there was a failure"
-					code=1 
-				}
-				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
-				exit $code
+					export db_type="accumulo"
+					source ci/createcluster.sh
+					code=0
+					{
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh
+						npm install newman --global
+						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
+							-e ci/Postman/environments/gw_hbase.postman_environment.json \
+							--timeout-request 10000 \
+							--global-var "domain=${DOMAIN}"
+					} || {
+						echo "there was a failure"
+						code=1 
+					}
+					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+					exit $code
 				'''
+			}
+			post {
+				failure {
+					slackSend color: 'bad', message: ':fire: The accumulo acceptance tests have failed :fire:'
+				}
 			}
 		}
 	}

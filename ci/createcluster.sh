@@ -29,7 +29,7 @@ CLUSTER_ID=$(aws emr create-cluster \
 --name ${CLUSTER_NAME} \
 --ec2-attributes "KeyName=${KEYNAME},SubnetId=${SUBNET_ID},EmrManagedMasterSecurityGroup=${MASTER_SECURITY_GROUP},EmrManagedSlaveSecurityGroup=${SLAVE_SECURITY_GROUP}" \
 --release-label ${EMR_VERSION} \
---applications Name=Hadoop ${hbaseApp} Name=Pig Name=Hue Name=Hive \
+--applications Name=Hadoop ${hbaseApp} Name=Zookeeper \
 --use-default-roles \
 --no-auto-terminate \
 --tags Project="Geowave" User="James-Auto" DeleteWhen="Running for more than 1 HR" \

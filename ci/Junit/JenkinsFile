@@ -20,7 +20,6 @@ pipeline {
 						--global-var "domain=${DOMAIN}"
 				} || {
 					echo "there was a failure"
-					slackSend(color: "#FF0000", message: "The HBase Acceptance Tests Have Failed!")
 					code=1 
 				}
 				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
@@ -44,7 +43,6 @@ pipeline {
 						--global-var "domain=${DOMAIN}"
 				} || {
 					echo "there was a failure"
-					slackSend(color: "#FF0000", message: "The Accumulo Acceptance Tests Have Failed!")
 					code=1 
 				}
 				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}

@@ -12,6 +12,7 @@ pipeline {
 				{
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh
+					curl ${DOMAIN}:8000/restservices/api
 					npm install newman --global
 					PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
 						-e ci/Postman/environments/gw_hbase.postman_environment.json \

@@ -16,6 +16,7 @@
 						{
 							"listen": "test",
 							"script": {
+								"id": "3d83e847-4ace-4000-b3b4-8daef2b12fae",
 								"type": "text/javascript",
 								"exec": [
 									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
@@ -27,7 +28,7 @@
 									"",
 									"testLevels(tests, data, \"swagger\")",
 									"",
-									"postman.setEnvironmentVariable('base', postman.getEnvironmentVariable('domain') + \":\" + postman.getEnvironmentVariable('port') + \"/\" + postman.getEnvironmentVariable('version'));"
+									"postman.setEnvironmentVariable('base', postman.getGlobalVariable('domain') + \":\" + postman.getEnvironmentVariable('port') + \"/\" + postman.getEnvironmentVariable('version'));"
 								]
 							}
 						}

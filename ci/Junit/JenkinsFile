@@ -28,7 +28,12 @@ pipeline {
 			}
 			post {
 				failure {
-					slackSend color: 'bad', message: ':fire: The hbase acceptance tests have failed :fire:'
+					slackSend color: 'danger', message: ':fire: The hbase acceptance tests have failed :fire:'
+				}
+				changed {
+					if (currentBuild.currentResult == 'SUCCESS') {
+						slackSend color: 'good', message: ':unicorn_face: The hbase acceptance tests are passing again! :unicorn_face:'
+					}
 				}
 			}
 		}
@@ -56,7 +61,12 @@ pipeline {
 			}
 			post {
 				failure {
-					slackSend color: 'bad', message: ':fire: The accumulo acceptance tests have failed :fire:'
+					slackSend color: 'danger', message: ':fire: The accumulo acceptance tests have failed :fire:'
+				}
+				changed {
+					if (currentBuild.currentResult == 'SUCCESS') {
+						slackSend color: 'good', message: ':unicorn_face: The accumulo acceptance tests are passing again! :unicorn_face:'
+					}
 				}
 			}
 		}

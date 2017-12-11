@@ -4,32 +4,30 @@ pipeline {
 	agent any
 	stages {
 		stage('HBase Tests') {
-			steps{
-				try {
-					sh '''
-						export db_type="hbase"
-						source ci/createcluster.sh
-						code=0
-						{
-							ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
-							ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh
-							curl ${DOMAIN}:8000/restservices/api
-							npm install newman --global
-							PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
-								-e ci/Postman/environments/gw_hbase.postman_environment.json \
-								--timeout-request 10000 \
-								--global-var "domain=${DOMAIN}"
-						} || {
-							echo "there was a failure"
-							code=1 
-						}
-						aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
-						exit $code
-					'''
-				}
-				catch (e) {
-					slackSend color: 'bad', message: ':fire: The hbase acceptance tests have failed :fire:'
-				}
+			try {
+				sh '''
+					export db_type="hbase"
+					source ci/createcluster.sh
+					code=0
+					{
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh
+						curl ${DOMAIN}:8000/restservices/api
+						npm install newman --global
+						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
+							-e ci/Postman/environments/gw_hbase.postman_environment.json \
+							--timeout-request 10000 \
+							--global-var "domain=${DOMAIN}"
+					} || {
+						echo "there was a failure"
+						code=1 
+					}
+					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+					exit $code
+				'''
+			}
+			catch (e) {
+				slackSend color: 'bad', message: ':fire: The hbase acceptance tests have failed :fire:'
 			}
 		}
 		stage('Accumulo Tests') {

@@ -5,6 +5,7 @@ pipeline {
 	stages {
 		stage('HBase Tests') {
 			steps{
+				slackSend color: 'good', message: 'in ur pipeline, spamming ur slack'
 				sh '''
 				export db_type="hbase"
 				source ci/createcluster.sh
@@ -25,6 +26,7 @@ pipeline {
 				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
 				exit $code
 				'''
+				slackSend color: 'bad', message: 'does this message get sent?'
 			}
 		}
 		stage('Accumulo Tests') {

@@ -12,7 +12,7 @@ pipeline {
 					{
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh
-						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/gethostname.sh)
+						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh)
 						curl ${DOMAIN}:8000/restservices/api
 						npm install newman --global
 						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
@@ -33,8 +33,10 @@ pipeline {
 					slackSend color: 'danger', message: ':fire: The hbase acceptance tests have failed :fire:'
 				}
 				changed {
-					if (currentBuild.currentResult == 'SUCCESS') {
-						slackSend color: 'good', message: ':unicorn_face: The hbase acceptance tests are passing again! :unicorn_face:'
+					script {
+						if (currentBuild.currentResult == 'SUCCESS') {
+							slackSend color: 'good', message: ':unicorn_face: The hbase acceptance tests are passing again! :unicorn_face:'
+						}
 					}
 				}
 			}
@@ -66,8 +68,10 @@ pipeline {
 					slackSend color: 'danger', message: ':fire: The accumulo acceptance tests have failed :fire:'
 				}
 				changed {
-					if (currentBuild.currentResult == 'SUCCESS') {
-						slackSend color: 'good', message: ':unicorn_face: The accumulo acceptance tests are passing again! :unicorn_face:'
+					script {
+						if (currentBuild.currentResult == 'SUCCESS') {
+							slackSend color: 'good', message: ':unicorn_face: The accumulo acceptance tests are passing again! :unicorn_face:'
+						}
 					}
 				}
 			}

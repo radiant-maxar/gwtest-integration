@@ -117,6 +117,7 @@
 						{
 							"listen": "test",
 							"script": {
+								"id": "5a43ef25-6af9-459e-a121-6cca5f078ac6",
 								"type": "text/javascript",
 								"exec": [
 									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
@@ -126,8 +127,9 @@
 									"",
 									"data = parseJSON(tests, responseBody);",
 									"",
-									"if (testLevels(tests, data, ['geoserver.url'])) {",
-									"    tests[\"Geoserver set to hostname\"] = data['geoserver.url'] == postman.getEnvironmentVariable('hostname') + \":8000\";",
+									"if (testLevels(tests, data, ['data','geoserver.url'])) {",
+									"    console.log(data.data['geoserver.url'])",
+									"    tests[\"Geoserver set to hostname\"] = data.data['geoserver.url'] == postman.getGlobalVariable('hostname') + \":8000\";",
 									"}"
 								]
 							}

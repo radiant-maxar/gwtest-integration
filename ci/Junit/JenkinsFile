@@ -24,7 +24,7 @@ pipeline {
 			}
 			post {
 				failure {
-					echo "# ! $ ! # This should be sending a slack failure # ! $ ! #"
+					echo "* ! > ! * This should be sending a slack failure * ! < ! *"
 					// slackSend color: 'danger', message: ':fire: The accumulo acceptance tests have failed :fire:'
 				}
 				changed {
@@ -57,7 +57,7 @@ pipeline {
 			}
 			post {
 				failure {
-					echo "# ! $ ! # This should be sending a slack failure # ! $ ! #"
+					echo "* ! > ! * This should be sending a slack failure * ! < ! *"
 					// slackSend color: 'danger', message: ':fire: The hbase acceptance tests have failed :fire:'
 				}
 				changed {

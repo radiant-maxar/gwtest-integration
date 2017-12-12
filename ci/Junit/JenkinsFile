@@ -18,7 +18,7 @@ pipeline {
 						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
 							-e ci/Postman/environments/gw_hbase.postman_environment.json \
 							--timeout-request 60000 \
-							--global-var "domain=${DOMAIN}"
+							--global-var "domain=${DOMAIN}" \
 							--global-var "hostname=${remoteHOSTNAME}"
 					} || {
 						echo "there was a failure"

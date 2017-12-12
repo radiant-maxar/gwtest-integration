@@ -58,9 +58,22 @@
 						{
 							"listen": "test",
 							"script": {
+								"id": "c18d3219-f46a-41a8-b0a9-1c8c8f3c9091",
 								"type": "text/javascript",
 								"exec": [
-									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
+									"",
+									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
+									"var parseJSON = eval(postman.getEnvironmentVariable('parseJSON'));",
+									"",
+									"data = parseJSON(tests, responseBody);",
+									"",
+									"if (testLevels(tests, data, 'status', 'string')) {",
+									"    tests[\"status is 'COMPLETE'\"] = data.status.match(/complete/i);",
+									"}",
+									"if (testLevels(tests, data, 'data', 'string')) {",
+									"    tests[\"response includes 'geoserver.url'\"] = data.data.match(/geoserver\\.url/i);",
+									"}"
 								]
 							}
 						}

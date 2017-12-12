@@ -16,7 +16,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3d83e847-4ace-4000-b3b4-8daef2b12fae",
+								"id": "4ed39f29-3903-4e5c-a475-e8b05f79829e",
 								"type": "text/javascript",
 								"exec": [
 									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
@@ -28,7 +28,9 @@
 									"",
 									"testLevels(tests, data, \"swagger\")",
 									"",
-									"postman.setEnvironmentVariable('base', postman.getGlobalVariable('domain') + \":\" + postman.getEnvironmentVariable('port') + \"/\" + postman.getEnvironmentVariable('version'));"
+									"postman.setEnvironmentVariable('base', postman.getGlobalVariable('domain') + \":\" + postman.getEnvironmentVariable('port') + \"/\" + postman.getEnvironmentVariable('version'));",
+									"postman.setEnvironmentVariable('retry_loop', 0);",
+									"postman.setEnvironmentVariable('max_retries', 120);"
 								]
 							}
 						}
@@ -222,14 +224,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{base}}/config/addstore/accumulo",
+							"raw": "{{base}}/config/addstore/{{instance}}",
 							"host": [
 								"{{base}}"
 							],
 							"path": [
 								"config",
 								"addstore",
-								"accumulo"
+								"{{instance}}"
 							]
 						},
 						"description": "good"
@@ -299,14 +301,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{base}}/config/addstore/accumulo",
+							"raw": "{{base}}/config/addstore/{{instance}}",
 							"host": [
 								"{{base}}"
 							],
 							"path": [
 								"config",
 								"addstore",
-								"accumulo"
+								"{{instance}}"
 							]
 						},
 						"description": "good"
@@ -384,9 +386,19 @@
 						{
 							"listen": "test",
 							"script": {
+								"id": "c9a182c2-d6fb-45d1-89cd-4ed4d8ab18e0",
 								"type": "text/javascript",
 								"exec": [
-									"tests[\"Status Code should be Success\"] = responseCode.code >= 200 && responseCode.code < 300; // change to looking for just 200 once fixed."
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
+									"",
+									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
+									"var parseJSON = eval(postman.getEnvironmentVariable('parseJSON'));",
+									"",
+									"data = parseJSON(tests, responseBody);",
+									"",
+									"if (testLevels(tests, data, 'data')) {",
+									"    postman.setEnvironmentVariable('ingestId', data.data);",
+									"}"
 								]
 							}
 						}
@@ -433,6 +445,65 @@
 							]
 						},
 						"description": "error with parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "Check Ingest Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7647bb2c-b540-429d-b503-bb68e52540f7",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
+									"",
+									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
+									"var parseJSON = eval(postman.getEnvironmentVariable('parseJSON'));",
+									"var wait = eval(postman.getEnvironmentVariable('wait'));",
+									"",
+									"data = parseJSON(tests, responseBody);",
+									"",
+									"if (testLevels(tests, data, 'status')) {",
+									"    if (data.status == \"RUNNING\") {",
+									"        if (parseInt(postman.getEnvironmentVariable('retry_loop')) < parseInt(postman.getEnvironmentVariable('max_retries'))) {",
+									"            postman.setEnvironmentVariable('retry_loop', parseInt(postman.getEnvironmentVariable('retry_loop')) + 1);",
+									"            postman.setNextRequest(request.name);",
+									"            wait(5000);",
+									"        }",
+									"        else {",
+									"            tests[\"Job should finish in time\"] = false;",
+									"        }",
+									"    } else {",
+									"        tests[\"Ingest should be successful\"] = data.status == \"COMPLETE\";",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{base}}/operation_status?id={{ingestId}}",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"operation_status"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{ingestId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
 					},
 					"response": []
 				},

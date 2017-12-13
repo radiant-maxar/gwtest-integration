@@ -22,14 +22,14 @@ node {
 				} || {
 					code=1
 				}
-				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+				// aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
 				exit $code
 			'''
 		}
 	}
 	tasks["HBase Tests"] = {
 		stage('HBase Tests') {
-			ssh '''
+			sh '''
 				code=0
 				{
 					export db_type="hbase"
@@ -47,7 +47,7 @@ node {
 				} || {
 					code=1
 				}
-				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+				// aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
 				exit $code
 			'''
 		}

@@ -2,7 +2,10 @@
 
 pipeline {
 	agent any
-	stages {
+
+	def tasks = [:]
+
+	tasks["HBase Tests"] = {
 		stage('HBase Tests') {
 			steps {
 				sh '''
@@ -41,6 +44,9 @@ pipeline {
 				}
 			}
 		}
+	}
+
+	tasks["Accumulo Tests"] = {
 		stage('Accumulo Tests') {
 			steps {
 				sh '''
@@ -80,4 +86,6 @@ pipeline {
 			}
 		}
 	}
+
+	parallel tasks
 }

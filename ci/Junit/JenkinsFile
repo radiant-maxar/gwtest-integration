@@ -17,7 +17,7 @@ pipeline {
 						sudo npm install newman --global &&
 						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
 							-e ci/Postman/environments/gw_hbase.postman_environment.json \
-							--timeout-request 10000 \
+							--timeout-request 60000 \
 							--global-var "domain=${DOMAIN}" \
 							--global-var "hostname=${remoteHOSTNAME}" &&
 					} || {
@@ -55,7 +55,7 @@ pipeline {
 						sudo npm install newman --global &&
 						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
 							-e ci/Postman/environments/gw_hbase.postman_environment.json \
-							--timeout-request 10000 \
+							--timeout-request 60000 \
 							--global-var "domain=${DOMAIN}" \
 							--global-var "hostname=${remoteHOSTNAME}" &&
 					} || {

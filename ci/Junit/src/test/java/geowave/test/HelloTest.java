@@ -50,7 +50,7 @@ public class HelloTest {
 		if (storeType.equals("hbase")) {
 			storeType = "hbase";
 		} else if (storeType.equals("accumulo")) {
-			storeType = "accumulo --user accumulo --password secret --instance accumulo";
+			storeType = "accumulo --user root --password secret --instance accumulo";
 		} else {
 			fail(String.format("Store Type, %s, is not valid", storeType));
 		}

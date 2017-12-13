@@ -211,7 +211,7 @@
 								},
 								{
 									"key": "user",
-									"value": "accumulo",
+									"value": "root",
 									"type": "text",
 									"description": ""
 								},
@@ -288,7 +288,7 @@
 								},
 								{
 									"key": "user",
-									"value": "accumulo",
+									"value": "root",
 									"type": "text",
 									"description": ""
 								},

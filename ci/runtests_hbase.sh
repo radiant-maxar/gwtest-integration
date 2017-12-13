@@ -8,6 +8,12 @@ export M2_HOME=$PWD/apache-maven-3.5.2
 export M2=$M2_HOME/bin
 export PATH=$M2:$PATH
 
+echo $PATH
+
+geowave --version
+
+which geowave
+
 # Source env vars, before running test
 source /mnt/geowave-env.sh
 

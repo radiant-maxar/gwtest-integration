@@ -6,18 +6,23 @@ pipeline {
 		stage('HBase Tests') {
 			steps {
 				sh '''
-					export db_type="hbase"
-					source ci/createcluster.sh
 					code=0
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh || code=1
-					remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh)
-					sudo npm install newman --global
-					PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
-						-e ci/Postman/environments/gw_hbase.postman_environment.json \
-						--timeout-request 10000 \
-						--global-var "domain=${DOMAIN}" \
-						--global-var "hostname=${remoteHOSTNAME}" || code=1
+					{
+						export db_type="hbase"
+						source ci/createcluster.sh &&
+						code=0
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh &&
+						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
+						sudo npm install newman --global &&
+						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
+							-e ci/Postman/environments/gw_hbase.postman_environment.json \
+							--timeout-request 10000 \
+							--global-var "domain=${DOMAIN}" \
+							--global-var "hostname=${remoteHOSTNAME}" &&
+					} || {
+						code=1
+					}
 					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
 					exit $code
 				'''
@@ -39,18 +44,23 @@ pipeline {
 		stage('Accumulo Tests') {
 			steps {
 				sh '''
-					export db_type="accumulo"
-					source ci/createcluster.sh
 					code=0
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh || code=1
-					remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh)
-					sudo npm install newman --global
-					PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
-						-e ci/Postman/environments/gw_hbase.postman_environment.json \
-						--timeout-request 10000 \
-						--global-var "domain=${DOMAIN}" \
-						--global-var "hostname=${remoteHOSTNAME}" || code=1
+					{
+						export db_type="accumulo"
+						source ci/createcluster.sh &&
+						code=0
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh  &&
+						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
+						sudo npm install newman --global &&
+						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
+							-e ci/Postman/environments/gw_hbase.postman_environment.json \
+							--timeout-request 10000 \
+							--global-var "domain=${DOMAIN}" \
+							--global-var "hostname=${remoteHOSTNAME}" &&
+					} || {
+						code=1
+					}
 					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
 					exit $code
 				'''

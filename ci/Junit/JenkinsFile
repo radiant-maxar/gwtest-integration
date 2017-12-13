@@ -19,7 +19,7 @@ pipeline {
 							-e ci/Postman/environments/gw_hbase.postman_environment.json \
 							--timeout-request 60000 \
 							--global-var "domain=${DOMAIN}" \
-							--global-var "hostname=${remoteHOSTNAME}" &&
+							--global-var "hostname=${remoteHOSTNAME}"
 					} || {
 						code=1
 					}
@@ -57,7 +57,7 @@ pipeline {
 							-e ci/Postman/environments/gw_hbase.postman_environment.json \
 							--timeout-request 60000 \
 							--global-var "domain=${DOMAIN}" \
-							--global-var "hostname=${remoteHOSTNAME}" &&
+							--global-var "hostname=${remoteHOSTNAME}"
 					} || {
 						code=1
 					}

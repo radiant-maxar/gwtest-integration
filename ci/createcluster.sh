@@ -32,7 +32,7 @@ CLUSTER_ID=$(aws emr create-cluster \
 --applications Name=Hadoop ${hbaseApp} Name=ZooKeeper \
 --use-default-roles \
 --tags Project="Geowave" User="James-Auto" DeleteWhen="Running for more than 1 HR" \
---log-uri s3://temp-logs-james \
+--log-uri s3://james-emr-test-logs \
 --instance-fleets InstanceFleetType=MASTER,TargetSpotCapacity=1,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=TERMINATE_CLUSTER}'} \
 InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=TERMINATE_CLUSTER}'} \
 --bootstrap-action Path=s3://geowave/latest/scripts/emr/${db_type}/bootstrap-geowave.sh \

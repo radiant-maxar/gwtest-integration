@@ -1,8 +1,9 @@
 #!/usr/bin/env groovy
 
-pipeline {
+node {
 	agent any
-	stages {
+	def tasks = [:]
+	tasks["Accumulo Tests"] = {
 		stage('Accumulo Tests') {
 			steps {
 				sh '''
@@ -34,6 +35,8 @@ pipeline {
 				}
 			}
 		}
+	}
+	tasks["HBase Tests"] = {
 		stage('HBase Tests') {
 			steps {
 				sh '''
@@ -66,4 +69,6 @@ pipeline {
 			}
 		}
 	}
+
+	parallel tasks
 }

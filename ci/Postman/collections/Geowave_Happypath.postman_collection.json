@@ -211,13 +211,13 @@
 								},
 								{
 									"key": "user",
-									"value": "geowave",
+									"value": "accumulo",
 									"type": "text",
 									"description": ""
 								},
 								{
 									"key": "password",
-									"value": "geowave",
+									"value": "secret",
 									"type": "text",
 									"description": ""
 								}
@@ -265,38 +265,38 @@
 								{
 									"key": "name",
 									"value": "gdelt-kde",
-									"description": "",
-									"type": "text"
+									"type": "text",
+									"description": ""
 								},
 								{
 									"key": "zookeeper",
 									"value": "{{hostname}}:2181",
-									"description": "",
-									"type": "text"
+									"type": "text",
+									"description": ""
 								},
 								{
 									"key": "geowaveNamespace",
 									"value": "geowave.gdelt",
-									"description": "",
-									"type": "text"
+									"type": "text",
+									"description": ""
 								},
 								{
 									"key": "instance",
 									"value": "{{instance}}",
-									"description": "",
-									"type": "text"
+									"type": "text",
+									"description": ""
 								},
 								{
 									"key": "user",
-									"value": "geowave",
-									"description": "",
-									"type": "text"
+									"value": "accumulo",
+									"type": "text",
+									"description": ""
 								},
 								{
 									"key": "password",
-									"value": "geowave",
-									"description": "",
-									"type": "text"
+									"value": "secret",
+									"type": "text",
+									"description": ""
 								}
 							]
 						},

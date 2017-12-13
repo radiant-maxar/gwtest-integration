@@ -31,7 +31,6 @@ CLUSTER_ID=$(aws emr create-cluster \
 --release-label ${EMR_VERSION} \
 --applications Name=Hadoop ${hbaseApp} Name=ZooKeeper \
 --use-default-roles \
---no-auto-terminate \
 --tags Project="Geowave" User="James-Auto" DeleteWhen="Running for more than 1 HR" \
 --log-uri s3://temp-logs-james \
 --instance-fleets InstanceFleetType=MASTER,TargetSpotCapacity=1,InstanceTypeConfigs=['{InstanceType=m4.xlarge,BidPrice=0.5,WeightedCapacity=1}'],LaunchSpecifications={SpotSpecification='{TimeoutDurationMinutes=120,TimeoutAction=TERMINATE_CLUSTER}'} \

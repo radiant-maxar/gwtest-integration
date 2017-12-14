@@ -1,6 +1,10 @@
 #!/usr/bin/env groovy
 
 node {
+
+	stage "Checkout"
+	checkout scm
+
 	def tasks = [:]
 	tasks["Accumulo Tests"] = {
 		stage('Accumulo Tests') {

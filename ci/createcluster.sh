@@ -45,11 +45,11 @@ aws emr wait cluster-running --cluster-id ${CLUSTER_ID} --region ${REGION}
 DOMAIN=$(aws emr describe-cluster --cluster-id ${CLUSTER_ID} --region ${REGION} | jq .Cluster.MasterPublicDnsName | tr -d '"')
 
 # Write variables to files
-echo "$DOMAIN" > DOMAIN
-sudo chmod 666 DOMAIN
+echo "$DOMAIN" > DOMAIN_$db_type
+sudo chmod 666 DOMAIN_$db_type
 echo "$KEYNAME" > KEYNAME
 sudo chmod 666 KEYNAME
-echo "$CLUSTER_ID" > CLUSTER_ID
-sudo chmod 666 CLUSTER_ID
+echo "$CLUSTER_ID" > CLUSTER_ID_$db_type
+sudo chmod 666 CLUSTER_ID_$db_type
 echo "$REGION" > REGION
 sudo chmod 666 REGION

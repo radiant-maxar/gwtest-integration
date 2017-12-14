@@ -38,7 +38,7 @@ InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{In
 --bootstrap-action Path=s3://geowave/latest/scripts/emr/${db_type}/bootstrap-geowave.sh \
 --region ${REGION} | jq .ClusterId | tr -d '"')
 
-echo "DB TYPE IS: $db_type"
+printf "DB TYPE IS: %s" "${db_type}"
 
 # Wait until cluster has been created
 aws emr wait cluster-running --cluster-id ${CLUSTER_ID} --region ${REGION}

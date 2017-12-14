@@ -22,4 +22,4 @@ export db_type="hbase"
 
 # Run tests
 cd gwtest-integration/ci/Junit
-mvn test
+mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn test

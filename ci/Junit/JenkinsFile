@@ -17,6 +17,7 @@ node {
 					DOMAIN=`cat DOMAIN_${db_type}`
 					CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
 					code=0
+					sleep 2m #See if this wait prevents accumulo issues.
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh  &&
 					remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&

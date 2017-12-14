@@ -9,8 +9,8 @@ node {
 				{
 					export db_type="accumulo"
 					source ci/createcluster.sh &&
-					DOMAIN=DOMAIN_$db_type
-					CLUSTER_ID=CLUSTER_ID_$db_type
+					DOMAIN=DOMAIN_${db_type}
+					CLUSTER_ID=CLUSTER_ID_${db_type}
 					code=0
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${!DOMAIN} < ci/startup.sh &&
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${!DOMAIN} < ci/runtests_accumulo.sh  &&
@@ -24,7 +24,7 @@ node {
 				} || {
 					code=1
 				}
-				\\ aws emr terminate-clusters --cluster-ids ${!CLUSTER_ID} --region ${REGION}
+				aws emr terminate-clusters --cluster-ids ${!CLUSTER_ID} --region ${REGION}
 				exit $code
 			'''
 		}
@@ -36,8 +36,8 @@ node {
 				{
 					export db_type="hbase"
 					source ci/createcluster.sh &&
-					DOMAIN=DOMAIN_$db_type
-					CLUSTER_ID=CLUSTER_ID_$db_type
+					DOMAIN=DOMAIN_${db_type}
+					CLUSTER_ID=CLUSTER_ID_${db_type}
 					code=0
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${!DOMAIN} < ci/startup.sh &&
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${!DOMAIN} < ci/runtests_hbase.sh &&
@@ -51,7 +51,7 @@ node {
 				} || {
 					code=1
 				}
-				\\ aws emr terminate-clusters --cluster-ids ${!CLUSTER_ID} --region ${REGION}
+				aws emr terminate-clusters --cluster-ids ${!CLUSTER_ID} --region ${REGION}
 				exit $code
 			'''
 		}

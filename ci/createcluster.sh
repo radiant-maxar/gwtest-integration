@@ -38,6 +38,8 @@ InstanceFleetType=CORE,TargetSpotCapacity=$NUM_WORKERS,InstanceTypeConfigs=['{In
 --bootstrap-action Path=s3://geowave/latest/scripts/emr/${db_type}/bootstrap-geowave.sh \
 --region ${REGION} | jq .ClusterId | tr -d '"')
 
+echo "DB TYPE IS: $db_type"
+
 # Wait until cluster has been created
 aws emr wait cluster-running --cluster-id ${CLUSTER_ID} --region ${REGION}
 
@@ -45,11 +47,11 @@ aws emr wait cluster-running --cluster-id ${CLUSTER_ID} --region ${REGION}
 DOMAIN=$(aws emr describe-cluster --cluster-id ${CLUSTER_ID} --region ${REGION} | jq .Cluster.MasterPublicDnsName | tr -d '"')
 
 # Write variables to files
-echo "$DOMAIN" > DOMAIN_$db_type
-sudo chmod 666 DOMAIN_$db_type
+echo "$DOMAIN" > DOMAIN_${db_type}
+sudo chmod 666 DOMAIN_${db_type}
 echo "$KEYNAME" > KEYNAME
 sudo chmod 666 KEYNAME
-echo "$CLUSTER_ID" > CLUSTER_ID_$db_type
-sudo chmod 666 CLUSTER_ID_$db_type
+echo "$CLUSTER_ID" > CLUSTER_ID_${db_type}
+sudo chmod 666 CLUSTER_ID_${db_type}
 echo "$REGION" > REGION
 sudo chmod 666 REGION

@@ -454,7 +454,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7647bb2c-b540-429d-b503-bb68e52540f7",
+								"id": "308eb27c-e37a-4ca0-8318-c0b4d2d1aec6",
 								"type": "text/javascript",
 								"exec": [
 									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
@@ -477,6 +477,7 @@
 									"        }",
 									"    } else {",
 									"        tests[\"Ingest should be successful\"] = data.status == \"COMPLETE\";",
+									"        console.log(responseBody);  // Print Completed Response, pass or failure.",
 									"    }",
 									"}"
 								]
@@ -503,7 +504,7 @@
 								}
 							]
 						},
-						"description": ""
+						"description": null
 					},
 					"response": []
 				},

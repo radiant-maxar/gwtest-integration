@@ -33,7 +33,7 @@ CLUSTER_ID=$(aws emr create-cluster \
 --use-default-roles \
 --tags Project="Geowave" User="James-Auto" DeleteWhen="Running for more than 1 HR" \
 --log-uri s3://james-emr-test-logs \
---instance-groups InstanceGroupType=MASTER,InstanceType=m4.xlarge,BidPrice=0.5,InstanceCount=1 \ 
+--instance-groups InstanceGroupType=MASTER,InstanceType=m4.xlarge,BidPrice=0.5,InstanceCount=1 \
 InstanceGroupType=CORE,InstanceType=m4.xlarge,BidPrice=0.5,InstanceCount=2 \
 --bootstrap-action Path=s3://geowave/latest/scripts/emr/${db_type}/bootstrap-geowave.sh \
 --region ${REGION} | jq .ClusterId | tr -d '"')

@@ -9,58 +9,71 @@ node {
 	def tasks = [:]
 	tasks["Accumulo Tests"] = {
 		stage('Accumulo Tests') {
-			sh '''
-				code=0
-				{
-					export db_type="accumulo"
-					source ci/createcluster.sh &&
-					DOMAIN=`cat DOMAIN_${db_type}`
-					CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
+			try {
+				sh '''
 					code=0
-					sleep 3m #See if this wait prevents geowave not found issues.
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh  &&
-					remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
-					sudo npm install newman --global &&
-					PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
-						-e ci/Postman/environments/gw_accumulo.postman_environment.json \
-						--timeout-request 60000 \
-						--global-var "domain=${DOMAIN}" \
-						--global-var "hostname=${remoteHOSTNAME}"
-				} || {
-					code=1
-				}
-				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
-				exit $code
-			'''
+					{
+						export db_type="accumulo"
+						source ci/createcluster.sh &&
+						DOMAIN=`cat DOMAIN_${db_type}`
+						CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
+						code=0
+						sleep 3m #See if this wait prevents geowave not found issues.
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh  &&
+						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
+						sudo npm install newman --global &&
+						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
+							-e ci/Postman/environments/gw_accumulo.postman_environment.json \
+							--timeout-request 60000 \
+							--global-var "domain=${DOMAIN}" \
+							--global-var "hostname=${remoteHOSTNAME}"
+					} || {
+						code=1
+					}
+					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+					exit $code
+				'''
+			}
+			catch (exc) {
+				slackSend color: 'danger', message: ':fire: The accumulo acceptance tests have failed :fire:'
+				throw
+			}
+
 		}
 	}
 	tasks["HBase Tests"] = {
 		stage('HBase Tests') {
-			sh '''
-				code=0
-				{
-					export db_type="hbase"
-					source ci/createcluster.sh &&
-					DOMAIN=`cat DOMAIN_${db_type}`
-					CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
+			try {
+				sh '''
 					code=0
-					sleep 3m #See if this wait prevents geowave not found issues.
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
-					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh &&
-					remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
-					sudo npm install newman --global &&
-					PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
-						-e ci/Postman/environments/gw_hbase.postman_environment.json \
-						--timeout-request 60000 \
-						--global-var "domain=${DOMAIN}" \
-						--global-var "hostname=${remoteHOSTNAME}"
-				} || {
-					code=1
-				}
-				aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
-				exit $code
-			'''
+					{
+						export db_type="hbase"
+						source ci/createcluster.sh &&
+						DOMAIN=`cat DOMAIN_${db_type}`
+						CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
+						code=0
+						sleep 3m #See if this wait prevents geowave not found issues.
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh &&
+						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
+						sudo npm install newman --global &&
+						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
+							-e ci/Postman/environments/gw_hbase.postman_environment.json \
+							--timeout-request 60000 \
+							--global-var "domain=${DOMAIN}" \
+							--global-var "hostname=${remoteHOSTNAME}"
+					} || {
+						code=1
+					}
+					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
+					exit $code
+				'''
+			}
+			catch (exc) {
+				slackSend color: 'danger', message: ':fire: The hbase acceptance tests have failed :fire:'
+				throw
+			}
 		}
 	}
 

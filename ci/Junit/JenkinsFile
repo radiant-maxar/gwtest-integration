@@ -37,9 +37,8 @@ node {
 			}
 			catch (exc) {
 				slackSend color: 'danger', message: ':fire: The accumulo acceptance tests have failed :fire:'
-				throw
+				currentBuild.result = 'FAILURE'
 			}
-
 		}
 	}
 	tasks["HBase Tests"] = {
@@ -72,7 +71,7 @@ node {
 			}
 			catch (exc) {
 				slackSend color: 'danger', message: ':fire: The hbase acceptance tests have failed :fire:'
-				throw
+				currentBuild.result = 'FAILURE'
 			}
 		}
 	}

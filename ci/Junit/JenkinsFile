@@ -17,7 +17,7 @@ node {
 					DOMAIN=`cat DOMAIN_${db_type}`
 					CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
 					code=0
-					sleep 4m #See if this wait prevents accumulo issues.
+					sleep 3m #See if this wait prevents geowave not found issues.
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh  &&
 					remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
@@ -45,6 +45,7 @@ node {
 					DOMAIN=`cat DOMAIN_${db_type}`
 					CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
 					code=0
+					sleep 3m #See if this wait prevents geowave not found issues.
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
 					ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh &&
 					remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&

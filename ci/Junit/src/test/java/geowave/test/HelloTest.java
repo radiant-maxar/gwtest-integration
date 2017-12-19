@@ -145,7 +145,7 @@ public class HelloTest {
 		
 		// Verify
 		configList = cmd.send("geowave config list");
-		assertEquals(vSpace, cmd.getProperty(configList, String.format("store.%s.opts.gwNamespace", vStore)));
+		assertEquals(hostname + ":8000", cmd.getProperty(configList, "geoserver.url"));
 		
 		// capture any env vars that may have been created during test.
 		cmd.setVars(environemntVariables, true);
@@ -221,7 +221,7 @@ public class HelloTest {
 		
 		// Verify
 		configList = cmd.send("geowave config list");
-		assertEquals(vSpace, cmd.getProperty(configList, String.format("store.%s.opts.gwNamespace", vStore)));
+		assertEquals(hostname + ":8000", cmd.getProperty(configList, "geoserver.url"));
 
 		// Add First Layer
 		TestUtils.assertSuccess(cmd.send("geowave gs addlayer " + rStore));

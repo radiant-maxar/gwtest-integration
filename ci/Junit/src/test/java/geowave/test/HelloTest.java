@@ -139,9 +139,13 @@ public class HelloTest {
 		// Verify
 		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + vStore)); // Should not have exception if ingest was successful.
 		
-		// Start Geoserver
+		// Config Geoserver
 		// PORT 8000 for EMR, 8993 for SandBox
 		TestUtils.assertSuccess(cmd.send(String.format("geowave config geoserver %s:8000", hostname)));
+		
+		// Verify
+		configList = cmd.send("geowave config list");
+		assertEquals(vSpace, cmd.getProperty(configList, String.format("store.%s.opts.gwNamespace", vStore)));
 		
 		// capture any env vars that may have been created during test.
 		cmd.setVars(environemntVariables, true);
@@ -167,6 +171,7 @@ public class HelloTest {
 		// Verify
 		assertTrue(TestUtils.insensitiveMatch(cmd.send("geowave gs listfl"), vCoverageKDE));
 		
+		// Add Styles
 		TestUtils.assertSuccess(cmd.send("geowave gs addstyle styleName_kde -sld /mnt/KDEColorMap.sld"));
 		TestUtils.assertSuccess(cmd.send("geowave gs addstyle styleName_sub -sld /mnt/SubsamplePoints.sld"));
 		
@@ -210,10 +215,14 @@ public class HelloTest {
 		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + rStore));
 		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + rCopiedStore)); // Should not have exception if ingest was successful.
 		
-		// Start Geoserver
+		// Config Geoserver
 		// PORT 8000 for EMR, 8993 for SandBox
 		TestUtils.assertSuccess(cmd.send(String.format("geowave config geoserver %s:8000", hostname)));
-				
+		
+		// Verify
+		configList = cmd.send("geowave config list");
+		assertEquals(vSpace, cmd.getProperty(configList, String.format("store.%s.opts.gwNamespace", vStore)));
+
 		// Add First Layer
 		TestUtils.assertSuccess(cmd.send("geowave gs addlayer " + rStore));
 		

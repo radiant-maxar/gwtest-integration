@@ -16,7 +16,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4ed39f29-3903-4e5c-a475-e8b05f79829e",
+								"id": "6fa96aea-80d3-4c17-8e63-c943ec15d72f",
 								"type": "text/javascript",
 								"exec": [
 									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
@@ -29,6 +29,7 @@
 									"testLevels(tests, data, \"swagger\")",
 									"",
 									"postman.setEnvironmentVariable('base', postman.getGlobalVariable('domain') + \":\" + postman.getEnvironmentVariable('port') + \"/\" + postman.getEnvironmentVariable('version'));",
+									"postman.setEnvironmentVariable('geoserver', postman.getGlobalVariable('domain') + \":\" + postman.getEnvironmentVariable('port') + \"/\" + postman.getEnvironmentVariable('gs_path'));",
 									"postman.setEnvironmentVariable('retry_loop', 0);",
 									"postman.setEnvironmentVariable('max_retries', 120);"
 								]
@@ -564,7 +565,7 @@
 			]
 		},
 		{
-			"name": "Geoserver",
+			"name": "Geoserver Via Geowave",
 			"description": "",
 			"item": [
 				{
@@ -1021,6 +1022,110 @@
 								{
 									"key": "layer_name",
 									"value": "gdeltevent",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Direct Geoserver",
+			"description": "",
+			"item": [
+				{
+					"name": "Hello Geoserver!",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2df8ce3b-be3f-46c5-a56b-3101ded4e3da",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{geoserver}}",
+							"host": [
+								"{{geoserver}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Geoserver Capabilities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "96daaa71-743e-486a-9f61-e7145aaeb1f4",
+								"type": "text/javascript",
+								"exec": [
+									"var data = xml2Json(responseBody);",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
+									"console.log(data);",
+									"",
+									"foundBBOX = false;",
+									"foundGetFeature = false;",
+									"",
+									"if (testLevels(tests, data, 'wfs:WFS_Capabilities.fes:Filter_Capabilities.fes:Spatial_Capabilities.fes:SpatialOperators.fes:SpatialOperator', 'array')) {",
+									"    spatialOps = data['wfs:WFS_Capabilities']['fes:Filter_Capabilities']['fes:Spatial_Capabilities']['fes:SpatialOperators']['fes:SpatialOperator'];",
+									"    for (i = 0; i < spatialOps.length; i++) {",
+									"        if(testLevels(tests, spatialOps[i], '$.name', 'string')) {",
+									"            foundBBOX = foundBBOX || spatialOps[i].$.name.match(/bbox/i);",
+									"        }",
+									"    }",
+									"}",
+									"if (testLevels(tests, data, 'wfs:WFS_Capabilities.ows:OperationsMetadata.ows:Operation', 'array')) {",
+									"    operations = data['wfs:WFS_Capabilities']['ows:OperationsMetadata']['ows:Operation'];",
+									"    for (i = 0; i < operations.length; i++) {",
+									"        if(testLevels(tests, operations[i], '$.name', 'string')) {",
+									"            foundGetFeature = foundGetFeature || operations[i].$.name.match(/getfeature/i);",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"BBOX Spatial Filter Operation should be present in Capabilities\"] = foundBBOX;",
+									"tests[\"GetFeature Operation should be present in Capabilities\"] = foundGetFeature;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{geoserver}}/geowave/ows?service=WFS&request=GetCapabilities",
+							"host": [
+								"{{geoserver}}"
+							],
+							"path": [
+								"geowave",
+								"ows"
+							],
+							"query": [
+								{
+									"key": "service",
+									"value": "WFS",
+									"equals": true
+								},
+								{
+									"key": "request",
+									"value": "GetCapabilities",
 									"equals": true
 								}
 							]

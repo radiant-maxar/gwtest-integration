@@ -221,7 +221,6 @@ public class HelloTest {
 		
 		// Verify
 		configList = cmd.send("geowave config list");
-		System.out.println(configList);
 		assertEquals(hostname + ":8000", cmd.getProperty(configList, "geoserver.url"));
 
 		// Add First Layer

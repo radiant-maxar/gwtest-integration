@@ -57,7 +57,7 @@ public class Cmd {
 	
 	public String getProperty(String response, String propertyRegEx) {
 		// Get string after property name + colon
-		propertyRegEx += ".*:";
+		propertyRegEx += ".?:";
 		String[] matches = response.split(propertyRegEx);
 		
 		// If no match, return empty string

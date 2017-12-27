@@ -1070,13 +1070,12 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "96daaa71-743e-486a-9f61-e7145aaeb1f4",
+								"id": "bdf77a5c-d386-4412-b8e6-d5e82ac0a1ef",
 								"type": "text/javascript",
 								"exec": [
 									"var data = xml2Json(responseBody);",
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
 									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
-									"console.log(data);",
 									"",
 									"foundBBOX = false;",
 									"foundGetFeature = false;",
@@ -1126,6 +1125,185 @@
 								{
 									"key": "request",
 									"value": "GetCapabilities",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Query - No Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e7286bc8-9bdc-4e05-9d03-bc0e5e9909cd",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
+									"",
+									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
+									"var parseJSON = eval(postman.getEnvironmentVariable('parseJSON'));",
+									"",
+									"data = parseJSON(tests, responseBody);",
+									"",
+									"if (testLevels(tests, data, 'features', 'array')) {",
+									"    tests[\"The correct number of features should be returned\"] = data.features.length == 50;",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{geoserver}}/geowave/ows?service=WFS&request=GetFeature&maxFeatures=50&version=1.1.0&typeName=geowave:gdeltevent&srsName=EPSG:4326&outputFormat=application/json",
+							"host": [
+								"{{geoserver}}"
+							],
+							"path": [
+								"geowave",
+								"ows"
+							],
+							"query": [
+								{
+									"key": "service",
+									"value": "WFS",
+									"equals": true
+								},
+								{
+									"key": "request",
+									"value": "GetFeature",
+									"equals": true
+								},
+								{
+									"key": "maxFeatures",
+									"value": "50",
+									"equals": true
+								},
+								{
+									"key": "version",
+									"value": "1.1.0",
+									"equals": true
+								},
+								{
+									"key": "typeName",
+									"value": "geowave:gdeltevent",
+									"equals": true
+								},
+								{
+									"key": "srsName",
+									"value": "EPSG:4326",
+									"equals": true
+								},
+								{
+									"key": "outputFormat",
+									"value": "application/json",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Query - Filter within Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6ea45dc3-f7ca-459e-ae7a-4770a623ae60",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status Code should be 200\"] = responseCode.code === 200;",
+									"",
+									"var testLevels = eval(postman.getEnvironmentVariable('testLevels'));",
+									"var parseJSON = eval(postman.getEnvironmentVariable('parseJSON'));",
+									"",
+									"data = parseJSON(tests, responseBody);",
+									"",
+									"latInRange = true;",
+									"lonInRange = true;",
+									"",
+									"if (testLevels(tests, data, 'features', 'array')) {",
+									"    tests[\"The correct number of features should be returned\"] = data.features.length == 50;",
+									"    for (i = 0; i < data.features.length; i++) {",
+									"        if (testLevels(tests, data.features[i], 'properties.Latitude')) {",
+									"            latInRange = latInRange && data.features[i].properties.Latitude >= 50 && data.features[i].properties.Latitude <= 51;",
+									"        } else {",
+									"            break;",
+									"        }",
+									"        if (testLevels(tests, data.features[i], 'properties.Longitude')) {",
+									"            lonInRange = lonInRange && data.features[i].properties.Longitude >= 10 && data.features[i].properties.Longitude <= 11;",
+									"        } else {",
+									"            break;",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"All features should be within lat filter\"] = latInRange;",
+									"tests[\"All features should be within lon filter\"] = lonInRange;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{geoserver}}/geowave/ows?service=WFS&request=GetFeature&maxFeatures=50&version=1.1.0&typeName=geowave:gdeltevent&CQL_FILTER=BBOX(geometry,50,10,51,11)&srsName=EPSG:4326&outputFormat=application/json",
+							"host": [
+								"{{geoserver}}"
+							],
+							"path": [
+								"geowave",
+								"ows"
+							],
+							"query": [
+								{
+									"key": "service",
+									"value": "WFS",
+									"equals": true
+								},
+								{
+									"key": "request",
+									"value": "GetFeature",
+									"equals": true
+								},
+								{
+									"key": "maxFeatures",
+									"value": "50",
+									"equals": true
+								},
+								{
+									"key": "version",
+									"value": "1.1.0",
+									"equals": true
+								},
+								{
+									"key": "typeName",
+									"value": "geowave:gdeltevent",
+									"equals": true
+								},
+								{
+									"key": "CQL_FILTER",
+									"value": "BBOX(geometry,50,10,51,11)",
+									"equals": true
+								},
+								{
+									"key": "srsName",
+									"value": "EPSG:4326",
+									"equals": true
+								},
+								{
+									"key": "outputFormat",
+									"value": "application/json",
 									"equals": true
 								}
 							]

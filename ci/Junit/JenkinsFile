@@ -80,6 +80,7 @@ node {
 			try {
 				sh '''
 					code=0
+					echo "foo"
 					{
 						export option=jupyter
 						source ci/createcluster.sh &&

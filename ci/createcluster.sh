@@ -22,16 +22,20 @@ export AWS_SESSION_TOKEN=$(echo ${AWS_CREDS} | jq .Credentials.SessionToken | tr
 if [ $option = "hbase" ]; then
 	additionalApps="Name=HBase"
 	bootstraps="Path=s3://geowave/latest/scripts/emr/hbase/bootstrap-geowave.sh"
+	size="32"
 elif [ $option = "jupyter" ]; then
 	additionalApps="Name=HBase Name=Pig Name=Spark Name=Hive"
 	bootstraps="Path=s3://geowave/latest/scripts/emr/hbase/bootstrap-geowave.sh Path=s3://geowave/latest/scripts/emr/jupyter/bootstrap-jupyter.sh"
+	size="48"
 elif [ $option = "accumulo" ]; then
 	additionalApps=""
 	bootstraps="Path=s3://geowave/latest/scripts/emr/accumulo/bootstrap-geowave.sh"
+	size="32"
 else
 	echo "WARNING: The option $option is unrecognized.  Please check test scripts!!!"
 	additionalApps=""
 	bootstraps=""
+	size="32"
 fi
 
 
@@ -47,6 +51,7 @@ CLUSTER_ID=$(aws emr create-cluster \
 --log-uri s3://james-emr-test-logs \
 --instance-groups InstanceGroupType=MASTER,InstanceType=m4.xlarge,BidPrice=0.5,InstanceCount=1 \
 InstanceGroupType=CORE,InstanceType=m4.xlarge,BidPrice=0.5,InstanceCount=2 \
+--ebs-root-volume-size ${size} \
 --bootstrap-action ${bootstraps} \
 --region ${REGION} | jq .ClusterId | tr -d '"')
 

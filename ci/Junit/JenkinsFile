@@ -13,7 +13,7 @@ node {
 				sh '''
 					code=0
 					{
-						export option = "accumulo"
+						export option=accumulo
 						source ci/createcluster.sh &&
 						DOMAIN=`cat DOMAIN_${option}`
 						CLUSTER_ID=`cat CLUSTER_ID_${option}`
@@ -47,7 +47,7 @@ node {
 				sh '''
 					code=0
 					{
-						export option = "hbase"
+						export option=hbase
 						source ci/createcluster.sh &&
 						DOMAIN=`cat DOMAIN_${option}`
 						CLUSTER_ID=`cat CLUSTER_ID_${option}`
@@ -81,7 +81,7 @@ node {
 				sh '''
 					code=0
 					{
-						export option = "jupyter"
+						export option=jupyter
 						source ci/createcluster.sh &&
 						DOMAIN=`cat DOMAIN_${option}`
 						CLUSTER_ID=`cat CLUSTER_ID_${option}`

@@ -80,7 +80,6 @@ node {
 			try {
 				sh '''
 					code=0
-					echo "foo"
 					{
 						export option=jupyter
 						source ci/createcluster.sh &&
@@ -90,7 +89,7 @@ node {
 						sleep 3m #See if this wait prevents geowave not found issues.
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh &&
-						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
+						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh)
 					} || {
 						code=1
 					}

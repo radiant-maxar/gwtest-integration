@@ -88,7 +88,7 @@ node {
 						code=0
 						sleep 3m #See if this wait prevents geowave not found issues.
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
-						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh &&
+						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_jupyter.sh &&
 						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh)
 					} || {
 						code=1

@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 # Clone test repo
-git clone https://github.com/venicegeo/gwtest-integration.git
+git clone -b new-jupyter-tests https://github.com/venicegeo/gwtest-integration.git
 
 find
 

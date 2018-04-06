@@ -20,7 +20,7 @@ node {
 						code=0
 						sleep 3m #See if this wait prevents geowave not found issues.
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
-						timeout 3600 ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh  &&
+						timeout 2400 ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_accumulo.sh  &&
 						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
 						sudo npm install newman --global &&
 						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \
@@ -54,7 +54,7 @@ node {
 						code=0
 						sleep 3m #See if this wait prevents geowave not found issues.
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
-						timeout 3600 ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh &&
+						timeout 2400 ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_hbase.sh &&
 						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh) &&
 						sudo npm install newman --global &&
 						PATH=$(npm bin):$PATH newman run ci/Postman/collections/Geowave_Happypath.postman_collection.json \

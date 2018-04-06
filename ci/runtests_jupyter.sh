@@ -1,7 +1,9 @@
 #!/bin/bash -xe
 
-echo "HELLO, JUPYTER"
+# Clone test repo
+git clone https://github.com/venicegeo/gwtest-integration.git
 
-echo "..."
+cd Jupyter
 
-echo "Get it?  Jupyter ... World ... Earth ... whatever."
+jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=60 --ExecutePreprocessor.allow_errors=True --output results.ipynb Index.ipynb
+python jupyter_tester.py results.ipynb expected_outputs.json

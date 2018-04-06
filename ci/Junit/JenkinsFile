@@ -7,6 +7,7 @@ node {
 	}
 
 	def tasks = [:]
+	/*
 	tasks["Accumulo Tests"] = {
 		stage('Accumulo Tests') {
 			try {
@@ -75,6 +76,7 @@ node {
 			}
 		}
 	}
+	*/
 	tasks["Jupyter Notebook Tests"] = {
 		stage('Jupyter Notebook Tests') {
 			try {
@@ -88,7 +90,7 @@ node {
 						code=0
 						sleep 3m #See if this wait prevents geowave not found issues.
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
-						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_jupyter.sh &&
+						timeout 2400 ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_jupyter.sh &&
 						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh)
 					} || {
 						code=1

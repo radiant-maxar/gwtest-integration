@@ -2,3 +2,4 @@ ci/Junit/.classpath
 ci/Junit/.project
 ci/Junit/.settings
 ci/Junit/target/
+ci/Junit/bin/

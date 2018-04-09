@@ -1,11 +1,15 @@
 #! python
 
-import json, re, sys
+import json, re, sys, subprocess
 
 # Convert input files to JSON.
 expected_file = json.load(open(sys.argv[1]))
-results = json.load(open(expected_file["path"]))
+orig_notebook = expected_file["path"]
 regexes = expected_file["outputs"]
+
+# Execute the notebook
+subprocess.call(["jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=60 --ExecutePreprocessor.allow_errors=True --output results.ipynb {0}".format()])
+results = json.load(open("results.ipynb"))
 
 # Extract all output fields from the results file.
 cell_outputs = [cell["outputs"] for cell in results["cells"] if "outputs" in cell]

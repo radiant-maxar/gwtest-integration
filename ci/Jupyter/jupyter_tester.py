@@ -8,7 +8,7 @@ orig_notebook = expected_file["path"]
 regexes = expected_file["outputs"]
 
 # Execute the notebook
-subprocess.call(["jupyter nbconvert", "--to", "notebook", "--execute", "--ExecutePreprocessor.timeout=60", "--ExecutePreprocessor.allow_errors=True", "--output results.ipynb", orig_notebook])
+subprocess.call(["jupyter", "nbconvert", "--to", "notebook", "--execute", "--ExecutePreprocessor.timeout=60", "--ExecutePreprocessor.allow_errors=True", "--output results.ipynb", orig_notebook])
 results = json.load(open("results.ipynb"))
 
 # Extract all output fields from the results file.

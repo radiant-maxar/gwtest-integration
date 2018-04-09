@@ -1,6 +1,9 @@
-[
-	"Hello World",
-	"3\\.14",
-	"bar,",
-	"garbage"
-]
+{
+	"path": "/home/hadoop/notebooks/geowave-gpx.ipynb",
+	"outputs": [
+		"",
+		"successfully",
+		"successfully",
+		"version"
+	]
+}

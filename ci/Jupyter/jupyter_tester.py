@@ -3,8 +3,9 @@
 import json, re, sys
 
 # Convert input files to JSON.
-results = json.load(open(sys.argv[1]))
-regexes = json.load(open(sys.argv[2]))
+expected_file = json.load(open(sys.argv[1]))
+results = json.load(open(expected_file["path"]))
+regexes = expected_file["outputs"]
 
 # Extract all output fields from the results file.
 cell_outputs = [cell["outputs"] for cell in results["cells"] if "outputs" in cell]

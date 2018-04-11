@@ -133,8 +133,6 @@ public class HelloTest {
 		assertEquals("32", cmd.getProperty(configList, String.format("index.%s.opts.numPartitions", vIndex)));
 		assertEquals("spatial", cmd.getProperty(configList, String.format("index.%s.type", vIndex)));
 		
-		// Adding new line here, check Junit failure.
-		
 		// Ingest
 		cmd.send(ingestGermany); // Don't check for success here.  Currently throwing an error.
 		
@@ -209,8 +207,6 @@ public class HelloTest {
 		// Analyze Data
 		TestUtils.assertSuccess(cmd.send(cacheGermany));
 		TestUtils.assertSuccess(cmd.send(cacheBerlin));
-		
-		// Adding new line here, check Junit failure.
 		
 		// Ingest Data
 		cmd.send(ingestBerlin); // Don't check for success here.  Currently throwing an error.

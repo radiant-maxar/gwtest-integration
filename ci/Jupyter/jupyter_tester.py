@@ -34,6 +34,10 @@ for i, regex in enumerate(regexes):
 	print("Checking Output %d" % i)
 	print("-----------------")
 
+	if not regex:
+		print(" - Skipped")
+		continue
+
 	p = re.compile(regex)
 	try:
 		cell_output = cell_outputs[i]

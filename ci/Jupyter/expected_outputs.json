@@ -3,8 +3,9 @@
 	"outputs": [
 		"",
 		"(?i)successfully",
-		"(?i)successfully",
+		"(?i)success?fully",
 		"(?i)version",
+		"skip-this-row.  What is here?",
 		"(?is)20160229\\.export\\.CSV\\.zip[^\\n]*OK.*20160229\\.export\\.CSV\\.zip[^\\n]*saved",
 		"connecting to ZooKeeper",
 		"connecting to ZooKeeper",

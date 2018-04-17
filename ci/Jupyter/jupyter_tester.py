@@ -38,7 +38,6 @@ for i, regex in enumerate(regexes):
 		print(" - Skipped")
 		continue
 
-	p = re.compile(regex)
 	try:
 		cell_output = cell_outputs[i]
 	except:
@@ -47,8 +46,14 @@ for i, regex in enumerate(regexes):
 		exit_code = 1 # Should already be 1.
 		continue
 
-	for output in cell_output:
-		# Check each element in the output list
+	for i, regex_section in enumerate(regex):
+		# Check each regex in the list of regexes for the section
+		# Each regex section should pair with an output.
+
+		# Get the output and the regex to compare it to for this iteration.
+		output = cell_output[i]
+		p = re.compile(regex_section)
+
 		if "ename" in output:
 			# For errors, mark as failure, print.
 			exit_code = 1
@@ -66,7 +71,7 @@ for i, regex in enumerate(regexes):
 				for line in output["text"]:
 					print("     - ", line)
 				print("   - Expected Pattern:")
-				print("     - ", regex)
+				print("     - ", regex_section)
 		else:
 			# Mark as a failure if pass/failure can't be determined.
 			exit_code = 1

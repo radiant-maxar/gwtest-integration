@@ -52,7 +52,7 @@ for i, expected_command_response in enumerate(expected_command_responses):
 		exit_code = 1
 
 		# Print both the expected and actual outputs for this response, if there is a difference.
-		for n in 0:max(len(actual_command_response), len(expected_command_response)):
+		for n in range(max(len(actual_command_response), len(expected_command_response))):
 			print("   - Output %d" % n)
 			print("     ~~~~~~~~")
 			try:

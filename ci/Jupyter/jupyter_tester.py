@@ -56,7 +56,7 @@ for i, expected_command_response in enumerate(expected_command_responses):
 			print("   - Output %d" % n)
 			print("     ~~~~~~~~")
 			try:
-				print("     - Actual: %s" % "<NL>".join(actual_command_response[n]["text"]))
+				print("     - Actual: %s" % (" "*15).join(actual_command_response[n]["text"]))
 			except:
 				print("     - Actual: <>")
 			try:

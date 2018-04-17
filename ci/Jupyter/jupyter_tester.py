@@ -12,15 +12,15 @@ subprocess.call(["jupyter", "nbconvert", "--to", "notebook", "--execute", "--Exe
 	"--ExecutePreprocessor.allow_errors=True", "--ExecutePreprocessor.kernel_name=pythonwithpixiedustspark21",
 	"--output", "results.ipynb", notebook_under_test
 	])
-results = json.load(open(notebook_path + "/results.ipynb"))
+actual_results_notebook = json.load(open(notebook_path + "/results.ipynb"))
 
 # Extract all output fields from the results file.
-cell_outputs = [cell["outputs"] for cell in results["cells"] if "outputs" in cell]
+actual_command_responses = [cell["outputs"] for cell in actual_results_notebook["cells"] if "outputs" in cell]
 
 # Will become 1 if failure occurs
 exit_code = 0
 
-if not len(cell_outputs) == len(expected_command_responses):
+if not len(actual_command_responses) == len(expected_command_responses):
 	print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	print("WARNING: There is not an equal number of")
 	print("         Results and Matching Patterns!")
@@ -31,7 +31,7 @@ for i, expected_command_response in enumerate(expected_command_responses):
 	# For each output/regex pair:
 
 	print("")
-	print("Checking Output %d" % i)
+	print("Checking Response %d" % i)
 	print("-----------------")
 
 	if not expected_command_response:
@@ -39,27 +39,45 @@ for i, expected_command_response in enumerate(expected_command_responses):
 		continue
 
 	try:
-		cell_output = cell_outputs[i]
+		actual_command_response = actual_command_responses[i]
 	except:
 		# Print failure for each cell without an associated regex.
 		print(" - Failure: Output Not Present.")
 		exit_code = 1 # Should already be 1.
 		continue
 
-	for i, expected_output in enumerate(expected_command_response):
+	# Check to make sure that this response has the same number of expected and actual outputs.
+	if not len(actual_command_response) == len(expected_command_response):
+		print(" - Failure: Different number of expected/actual outputs")
+		exit_code = 1
+
+		# Print both the expected and actual outputs for this response, if there is a difference.
+		for n in 0:max(len(actual_command_response), len(expected_command_response)):
+			print("   - Output %d" % n)
+			print("     ~~~~~~~~")
+			try:
+				print("     - Actual: %s" % "<NL>".join(actual_command_response[n]["text"]))
+			except:
+				print("     - Actual: <>")
+			try:
+				print("     - Expected: %s" % expected_command_response[n])
+			except:
+				print("     - Expected: <>")
+
+	for j, expected_output in enumerate(expected_command_response):
 		# Check each regex in the list of regexes for the section
 		# Each regex section should pair with an output.
 
 		# Get the output and the regex to compare it to for this iteration.
-		output = cell_output[i]
+		actual_output = actual_command_response[j]
 		p = re.compile(expected_output)
 
-		if "ename" in output:
+		if "ename" in actual_output:
 			# For errors, mark as failure, print.
 			exit_code = 1
-			print(" - Failure: %s" % output["ename"])
-		elif "text" in output:
-			text = "\n".join(output["text"])
+			print(" - Failure: %s" % actual_output["ename"])
+		elif "text" in actual_output:
+			text = "\n".join(actual_output["text"])
 			if p.search(text):
 				# If a match, print success.
 				print(" - Passed")
@@ -68,7 +86,7 @@ for i, expected_command_response in enumerate(expected_command_responses):
 				exit_code = 1
 				print(" - Failure: String mismatch")
 				print("   - Actual String:")
-				for line in output["text"]:
+				for line in actual_output["text"]:
 					print("     - ", line)
 				print("   - Expected Pattern:")
 				print("     - ", expected_output)

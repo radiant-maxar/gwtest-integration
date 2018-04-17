@@ -64,6 +64,8 @@ for i, expected_command_response in enumerate(expected_command_responses):
 			except:
 				print("     - Expected: <>")
 
+		continue
+
 	for j, expected_output in enumerate(expected_command_response):
 		# Check each regex in the list of regexes for the section
 		# Each regex section should pair with an output.

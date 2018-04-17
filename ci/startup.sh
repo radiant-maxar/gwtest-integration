@@ -13,19 +13,19 @@
 # Install git
 sudo yum -y install git
 
-# Get GW scripts
-cd /mnt
-sudo wget s3.amazonaws.com/geowave/latest/scripts/sandbox/quickstart/geowave-env.sh
-sudo wget s3.amazonaws.com/geowave/latest/scripts/emr/quickstart/KDEColorMap.sld
-sudo wget s3.amazonaws.com/geowave/latest/scripts/emr/quickstart/SubsamplePoints.sld
-source /mnt/geowave-env.sh
+# # Get GW scripts
+# cd /mnt
+# sudo wget s3.amazonaws.com/geowave/latest/scripts/sandbox/quickstart/geowave-env.sh
+# sudo wget s3.amazonaws.com/geowave/latest/scripts/emr/quickstart/KDEColorMap.sld
+# sudo wget s3.amazonaws.com/geowave/latest/scripts/emr/quickstart/SubsamplePoints.sld
+# source /mnt/geowave-env.sh
 
-# Get gdelt data
-sudo mkdir $STAGING_DIR/gdelt;cd $STAGING_DIR/gdelt
-sudo wget http://data.gdeltproject.org/events/md5sums -q
-for file in `cat md5sums | cut -d' ' -f3 | grep "^${TIME_REGEX}"` ; \
-do sudo wget http://data.gdeltproject.org/events/$file -q; done
-md5sum -c md5sums 2>&1 | grep "^${TIME_REGEX}"
+# # Get gdelt data
+# sudo mkdir $STAGING_DIR/gdelt;cd $STAGING_DIR/gdelt
+# sudo wget http://data.gdeltproject.org/events/md5sums -q
+# for file in `cat md5sums | cut -d' ' -f3 | grep "^${TIME_REGEX}"` ; \
+# do sudo wget http://data.gdeltproject.org/events/$file -q; done
+# md5sum -c md5sums 2>&1 | grep "^${TIME_REGEX}"
 
 # Install Gdal
 cd /mnt

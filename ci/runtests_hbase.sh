@@ -4,7 +4,7 @@
 git clone -b ignore-exception https://github.com/venicegeo/gwtest-integration.git
 
 # Set maven paths
-export M2_HOME=$PWD/apache-maven-3.5.2
+export M2_HOME=$PWD/apache-maven-3.2.2
 export M2=$M2_HOME/bin
 export PATH=$M2:$PATH
 

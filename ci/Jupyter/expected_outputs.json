@@ -1,0 +1,21 @@
+{
+	"path": "/home/hadoop/notebooks/geowave-gdelt.ipynb",
+	"outputs": [
+		[],
+		["(?i)successfully", "", ""],
+		["(?i)success?fully"],
+		["(?i)version"],
+		["","(?is)20160229\\.export\\.CSV\\.zip[^\\n]*OK",".*20160229\\.export\\.CSV\\.zip[^\\n]*saved"],
+		[],
+		["connecting to ZooKeeper"],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		["(?is)Add GeoServer layer for 'kmeans_gdelt[^\\n]*OK.*Successfully added.*mycentroids_gdelt.*Set style for GeoServer layer 'mycentroids_gdelt[^\\n]*OK.*Add GeoServer layer for 'kmeans_gdelt[^\\n]*OK.*Successfully added.*myhulls_gdelt.*Set style for GeoServer layer 'myhulls_gdelt[^\\n]*OK"],
+		[],
+		["mycentroids_gdelt\\nmyhulls_gdelt"]
+	]
+}

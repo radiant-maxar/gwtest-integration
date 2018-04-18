@@ -2,6 +2,8 @@
 
 # Install maven.
 
+# Am I in the right branch?
+
 wget http://apache.spinellicreations.com/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz -q
 tar xf apache-maven-3.5.2-bin.tar.gz
 export M2_HOME=$PWD/apache-maven-3.5.2

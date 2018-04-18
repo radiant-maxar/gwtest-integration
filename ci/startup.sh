@@ -2,9 +2,9 @@
 
 # Install maven.
 
-wget http://apache.spinellicreations.com/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz -q
-tar xf apache-maven-3.5.2-bin.tar.gz
-export M2_HOME=$PWD/apache-maven-3.5.2
+wget http://archive.apache.org/dist/maven/binaries/apache-maven-3.2.2-bin.tar.gz -q
+tar xf apache-maven-3.2.2-bin.tar.gz
+export M2_HOME=$PWD/apache-maven-3.2.2
 export M2=$M2_HOME/bin
 export PATH=$M2:$PATH
 which mvn

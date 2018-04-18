@@ -13,10 +13,10 @@ node {
 				sh '''
 					code=0
 					{
-						export option=accumulo
+						export db_type="accumulo"
 						source ci/createcluster.sh &&
-						DOMAIN=`cat DOMAIN_${option}`
-						CLUSTER_ID=`cat CLUSTER_ID_${option}`
+						DOMAIN=`cat DOMAIN_${db_type}`
+						CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
 						code=0
 						sleep 3m #See if this wait prevents geowave not found issues.
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
@@ -36,7 +36,7 @@ node {
 				'''
 			}
 			catch (exc) {
-				// slackSend color: 'danger', message: ':fire: The accumulo acceptance tests have failed :fire:'
+				slackSend color: 'danger', message: ':fire: The accumulo acceptance tests have failed :fire:'
 				currentBuild.result = 'FAILURE'
 			}
 		}
@@ -47,10 +47,10 @@ node {
 				sh '''
 					code=0
 					{
-						export option=hbase
+						export db_type="hbase"
 						source ci/createcluster.sh &&
-						DOMAIN=`cat DOMAIN_${option}`
-						CLUSTER_ID=`cat CLUSTER_ID_${option}`
+						DOMAIN=`cat DOMAIN_${db_type}`
+						CLUSTER_ID=`cat CLUSTER_ID_${db_type}`
 						code=0
 						sleep 3m #See if this wait prevents geowave not found issues.
 						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
@@ -70,7 +70,7 @@ node {
 				'''
 			}
 			catch (exc) {
-				// slackSend color: 'danger', message: ':fire: The hbase acceptance tests have failed :fire:'
+				slackSend color: 'danger', message: ':fire: The hbase acceptance tests have failed :fire:'
 				currentBuild.result = 'FAILURE'
 			}
 		}

@@ -7,7 +7,6 @@ node {
 	}
 
 	def tasks = [:]
-	/*
 	tasks["Accumulo Tests"] = {
 		stage('Accumulo Tests') {
 			try {
@@ -75,36 +74,6 @@ node {
 				currentBuild.result = 'FAILURE'
 			}
 		}
-	}
-	*/
-	tasks["Jupyter Notebook Tests"] = {
-		stage('Jupyter Notebook Tests') {
-			try {
-				sh '''
-					code=0
-					{
-						export option=jupyter
-						source ci/createcluster.sh &&
-						DOMAIN=`cat DOMAIN_${option}`
-						CLUSTER_ID=`cat CLUSTER_ID_${option}`
-						code=0
-						sleep 3m #See if this wait prevents geowave not found issues.
-						ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/startup.sh &&
-						timeout 2400 ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/runtests_jupyter.sh &&
-						remoteHOSTNAME=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/${KEYNAME}.pem hadoop@${DOMAIN} < ci/getHOSTNAME.sh)
-					} || {
-						code=1
-					}
-					aws emr terminate-clusters --cluster-ids ${CLUSTER_ID} --region ${REGION}
-					exit $code
-				'''
-			}
-			catch (exc) {
-				// slackSend color: 'danger', message: ':fire: The jupyter notebook acceptance tests have failed :fire:'
-				currentBuild.result = 'FAILURE'
-			}
-		}
-
 	}
 
 	parallel tasks

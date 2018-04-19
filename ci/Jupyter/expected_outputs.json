@@ -15,7 +15,6 @@
 		[],
 		[],
 		["(?is)Add GeoServer layer for 'kmeans_gdelt[^\\n]*OK.*Successfully added.*mycentroids_gdelt.*Set style for GeoServer layer 'mycentroids_gdelt[^\\n]*OK.*Add GeoServer layer for 'kmeans_gdelt[^\\n]*OK.*Successfully added.*myhulls_gdelt.*Set style for GeoServer layer 'myhulls_gdelt[^\\n]*OK"],
-		[],
 		["mycentroids_gdelt\\nmyhulls_gdelt"]
 	]
 }

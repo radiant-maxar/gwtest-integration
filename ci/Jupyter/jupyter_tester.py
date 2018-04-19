@@ -24,6 +24,8 @@ if not len(actual_command_responses) == len(expected_command_responses):
 	print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	print("WARNING: There is not an equal number of")
 	print("         Results and Matching Patterns!")
+	print("         Expected: %d" % len(expected_command_responses))
+	print("         Actual:   %d" % len(actual_command_responses))
 	print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	exit_code = 1
 
@@ -34,6 +36,7 @@ for i, expected_command_response in enumerate(expected_command_responses):
 	print("Checking Response %d" % i)
 	print("-----------------")
 
+	# If expected_command_response is empty, do not check any part of the expected_command_response.
 	if not expected_command_response:
 		print(" - Skipped")
 		continue
@@ -69,6 +72,11 @@ for i, expected_command_response in enumerate(expected_command_responses):
 	for j, expected_output in enumerate(expected_command_response):
 		# Check each regex in the list of regexes for the section
 		# Each regex section should pair with an output.
+
+		# If expected_output is empty, do not check the actual_output.
+		if not expected_output:
+			print(" - Skipped")
+			continue
 
 		# Get the output and the regex to compare it to for this iteration.
 		actual_output = actual_command_response[j]

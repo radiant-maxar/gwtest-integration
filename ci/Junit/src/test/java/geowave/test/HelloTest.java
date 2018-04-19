@@ -134,7 +134,7 @@ public class HelloTest {
 		assertEquals("spatial", cmd.getProperty(configList, String.format("index.%s.type", vIndex)));
 		
 		// Ingest
-		TestUtils.assertSuccess(cmd.send(ingestGermany));
+		cmd.send(ingestGermany);
 		
 		// Verify
 		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + vStore)); // Should not have exception if ingest was successful.
@@ -209,7 +209,7 @@ public class HelloTest {
 		TestUtils.assertSuccess(cmd.send(cacheBerlin));
 		
 		// Ingest Data
-		TestUtils.assertSuccess(cmd.send(ingestBerlin));
+		cmd.send(ingestBerlin);
 		
 		// Verify
 		TestUtils.assertSuccess(cmd.send("geowave remote liststats " + rStore));

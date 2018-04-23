@@ -9,8 +9,7 @@ expected_command_responses = expected_responses_json["outputs"]
 notebook_path = os.path.dirname(notebook_under_test)
 # Execute the notebook
 subprocess.call(["jupyter", "nbconvert", "--to", "notebook", "--execute", "--ExecutePreprocessor.timeout=600", "--ExecutePreprocessor.interrupt_on_timeout=True",
-	"--ExecutePreprocessor.allow_errors=True", "--ExecutePreprocessor.kernel_name=pythonwithpixiedustspark22",
-	"--output", "results.ipynb", notebook_under_test
+	"--ExecutePreprocessor.allow_errors=True", "--output", "results.ipynb", notebook_under_test
 	])
 actual_results_notebook = json.load(open(notebook_path + "/results.ipynb"))
 

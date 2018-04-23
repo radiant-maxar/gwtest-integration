@@ -6,7 +6,7 @@ KEYNAME="geowave-benchmark"
 SUBNET_ID="subnet-0db4897b"
 MASTER_SECURITY_GROUP="sg-edc8f490"
 SLAVE_SECURITY_GROUP="sg-e9c8f494"
-EMR_VERSION="emr-5.12.1"
+EMR_VERSION="emr-5.13.0"
 TAGNAME=""
 REGION="us-east-1"
 VERSION="latest"
@@ -25,7 +25,7 @@ if [ $option = "hbase" ]; then
 	size="32"
 elif [ $option = "jupyter" ]; then
 	additionalApps="Name=HBase Name=Pig Name=Spark Name=Hive"
-	bootstraps="Path=s3://geowave/latest/scripts/emr/hbase/bootstrap-geowave.sh Path=s3://geowave/latest/scripts/emr/jupyter/bootstrap-jupyter.sh"
+	bootstraps="Path=s3://geowave/latest/scripts/emr/hbase/bootstrap-geowave.sh Path=s3://geowave-jupyter/bootstrap-jupyter.sh"
 	size="48"
 elif [ $option = "accumulo" ]; then
 	additionalApps=""

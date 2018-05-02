@@ -20,11 +20,11 @@ export AWS_SESSION_TOKEN=$(echo ${AWS_CREDS} | jq .Credentials.SessionToken | tr
 
 # Switch between configurations, based on what is being tested.
 if [ $option = "hbase" ]; then
-	additionalApps="Name=HBase"
+	additionalApps="Name=HBase Name=Pig Name=Spark Name=Hive"
 	bootstraps="Path=s3://geowave/latest/scripts/emr/hbase/bootstrap-geowave.sh Path=s3://geowave-jupyter/bootstrap-jupyter.sh"
 	size="48"
 elif [ $option = "accumulo" ]; then
-	additionalApps=""
+	additionalApps="Name=Pig Name=Spark Name=Hive"
 	bootstraps="Path=s3://geowave/latest/scripts/emr/accumulo/bootstrap-geowave.sh Path=s3://geowave-jupyter/bootstrap-jupyter.sh"
 	size="48"
 else

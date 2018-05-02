@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 # Clone test repo
-git clone https://github.com/venicegeo/gwtest-integration.git
+git clone -b new-jupyter-tests https://github.com/venicegeo/gwtest-integration.git
 
 # Set maven paths
 export M2_HOME=$PWD/apache-maven-3.2.2
@@ -23,3 +23,10 @@ export db_type="hbase"
 # Run tests
 cd gwtest-integration/ci/Junit
 mvn -B test
+
+# Run all notebook tests
+cd **/Jupyter/expected_outputs/$db_type
+for file in expected_outputs/$db_type/*
+do
+	python jupyter_tester.py $file
+done

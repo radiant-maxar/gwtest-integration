@@ -2,16 +2,35 @@
 
 import json, re, sys, subprocess, os
 
+def ls(d):
+	for dirName, subdirList, fileList in os.walk(d):
+		print(dirName)
+		for fname in fileList:
+			print('\t' + fname)
+
+
 # Convert input files to JSON.
 expected_responses_json = json.load(open(sys.argv[1]))
 notebook_under_test = expected_responses_json["path"]
 expected_command_responses = expected_responses_json["outputs"]
 notebook_path = os.path.dirname(notebook_under_test)
 # Execute the notebook
+
+ls("")
+print("-----")
+ls(notebook_path)
+
 subprocess.call(["jupyter", "nbconvert", "--to", "notebook", "--execute", "--ExecutePreprocessor.timeout=600", "--ExecutePreprocessor.interrupt_on_timeout=True",
 	"--ExecutePreprocessor.allow_errors=True", "--ExecutePreprocessor.kernel_name=pythonwithpixiedustspark23",
 	"--output", notebook_path + "/results.ipynb", notebook_under_test
 	])
+
+print("~~~~~~~~~~~~")
+
+ls("")
+print("-----")
+ls(notebook_path)
+
 actual_results_notebook = json.load(open(notebook_path + "/results.ipynb"))
 
 # Extract all output fields from the results file.

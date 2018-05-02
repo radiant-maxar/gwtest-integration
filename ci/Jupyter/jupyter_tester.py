@@ -12,7 +12,7 @@ subprocess.call(["jupyter", "nbconvert", "--to", "notebook", "--execute", "--Exe
 	"--ExecutePreprocessor.allow_errors=True", "--ExecutePreprocessor.kernel_name=pythonwithpixiedustspark23",
 	"--output", "results.ipynb", notebook_under_test
 	])
-actual_results_notebook = json.load(open(notebook_path + "/results.ipynb"))
+actual_results_notebook = json.load(open("results.ipynb"))
 
 # Extract all output fields from the results file.
 actual_command_responses = [cell["outputs"] for cell in actual_results_notebook["cells"] if "outputs" in cell]

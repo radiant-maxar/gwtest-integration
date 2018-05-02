@@ -25,7 +25,7 @@ cd gwtest-integration/ci/Junit
 mvn -B test
 
 # Run all notebook tests
-cd **/Jupyter/expected_outputs/$db_type
+cd **/Jupyter
 for file in expected_outputs/$db_type/*
 do
 	python jupyter_tester.py $file

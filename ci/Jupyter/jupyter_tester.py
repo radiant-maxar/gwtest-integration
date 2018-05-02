@@ -21,7 +21,7 @@ print("-----")
 ls(notebook_path)
 
 subprocess.call(["jupyter", "nbconvert", "--to", "notebook", "--execute", "--ExecutePreprocessor.timeout=600", "--ExecutePreprocessor.interrupt_on_timeout=True",
-	"--ExecutePreprocessor.allow_errors=True", "--ExecutePreprocessor.kernel_name=pythonwithpixiedustspark23",
+	"--ExecutePreprocessor.allow_errors=True", "--ExecutePreprocessor.kernel_name=pythonwithpixiedustspark22",
 	"--output", notebook_path + "/results.ipynb", notebook_under_test
 	])
 
